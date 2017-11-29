@@ -4,11 +4,11 @@
 import sys
 #Vai ler do pipe cada coisa introduzida  e diferenciar cada um
 
-iteration = 0
 myConditions = list()
 myConditions.append(list())
 
 def recursive(line):
+	print(line)
 	if atom (line,True):
 		pass
 
@@ -39,6 +39,7 @@ def atom(sentence, value):
 		return False
 	elif len(sentence)==1:
 		if value == True:
+			global iteration
 			myConditions[iteration].append(sentence)
 		return True
 	return
@@ -46,6 +47,7 @@ def atom(sentence, value):
 def neg_atom(sentence, value):
 	if len(sentence)==2 and sentence[0]=='not' and atom(sentence[1],0):
 		if value == True:
+			global iteration
 			myConditions[iteration].append(sentence)
 		return True
 	else:
@@ -61,39 +63,84 @@ def equivalence(sentence1, sentence2):
 def implication(sentence1, sentence2):
 	new1 = ('not', sentence1)
 	disjunction(new1, sentence2);
-	print('imp')
 	return
 
 def disjunction(sentence1, sentence2):
 	if (atom(sentence1,0) or neg_atom(sentence1,0)) and (atom(sentence2,0) or neg_atom(sentence2,0)):
 		if (atom(sentence1,0) and neg_atom(sentence2,0) and sentence2[1]==sentence1[0]) or (atom(sentence2,0) and neg_atom(sentence1,0) and sentence1[1]==sentence2[0]):# ignora-se.
 			return
-		else:
+		if (atom(sentence1,0) and atom(sentence2,0) and sentence2[1]==sentence1[0]) or (neg_atom(sentence2,0) and neg_atom(sentence1,0) and sentence1[1]==sentence2[0]):# ignora-se.
+			myConditions[iteration].append((sentence1))
+			return
+		else:	
+			global iteration
 			myConditions[iteration].append((sentence1, sentence2)) # not sure this is how its done
 			print('disj')
 	else:
-		distribution(sentence1, sentence2)
-		print('distr')
+		if not aux_dist(sentence1, sentence2):
+			if not aux_dist(sentence2, sentence1):			
+				if not aux2_dist(sentence1, sentence2):
+					aux2_dist(sentence2, sentence1)
 	return
 
 
-def distribution(sentence1, sentence2): # MERDAA
-	iteration = iteration+1
-	myConditions.append(list())
-	recursive(sentence1)
+def aux_dist(sentence1, sentence2):
+	global iteration
+	if (atom(sentence1,0) or neg_atom(sentence1,0)):
+		if sentence2[0]=='or':
+			if (atom(sentence2[1]) or neg_atom(sentence2[1])) && (atom(sentence2[2]) or neg_atom(sentence2[2])):
+				myConditions[iteration].append((sentence1, sentence2[1], sentence[2]))
+				return True
+			else:
+				aux2_dist(sentence2[1], sentence2[2])
 
-	iteration = iteration+1
-	myConditions.append(list())
-	recursive(sentence2)
+		elif sentence2[0]=='and':
+			disjunction(sentence1, sentence2[1])
+			disjunction(sentence1, sentence2[2])
+			return True
 
-	iteration = iteration - 2
-
-	for i in  range(0, len(myConditions[iteration-1])):
-		for j in range(0, len(myConditions[iteration-2])):
-			disjuntion(myConditions[iteration-1][i], myConditions[iteration-2][j])
-
+		elif sentence[0]=='<=>' :
+			new1 = ('not', sentence2[1])
+			new2 = ('not', sentence2[2])
+			myConditions[iteration].append((sentence1, new1, sentence[2]))
+			myConditions[iteration].append((sentence1, new2, sentence[1]))
+			return True
+		elif sentence[0]=='=>' :
+			new1 = ('not', sentence2[1])
+			myConditions[iteration].append((sentence1, new1, sentence[2]))
+			return True
 
 	return
+
+def aux2_dist(sentence1, sentence2):
+	global iteration
+	if (atom(sentence1,0) or neg_atom(sentence1,0)):
+		if sentence2[0]=='or':
+			if (atom(sentence2[1]) or neg_atom(sentence2[1])) && (atom(sentence2[2]) or neg_atom(sentence2[2])):
+				myConditions[iteration].append((sentence1, sentence2[1], sentence[2]))
+				return True
+			else:
+				aux_dist(sentence2[1], sentence[2])
+
+		elif sentence2[0]=='and':
+			disjunction(sentence1, sentence2[1])
+			disjunction(sentence1, sentence2[2])
+			return True
+
+		elif sentence[0]=='<=>' :
+			new1 = ('not', sentence2[1])
+			new2 = ('not', sentence2[2])
+			myConditions[iteration].append((sentence1, new1, sentence[2]))
+			myConditions[iteration].append((sentence1, new2, sentence[1]))
+			return True
+		elif sentence[0]=='=>' :
+			new1 = ('not', sentence2[1])
+			myConditions[iteration].append((sentence1, new1, sentence[2]))
+			return True
+
+	return
+
+
 
 
 def conjunction(sentence1, sentence2):
@@ -105,7 +152,9 @@ def conjunction(sentence1, sentence2):
 	return
 
 def negation(sentence):
+
 	if neg_atom(sentence,0):
+		global iteration
 		myConditions[iteration].append(sentence[1])
 
 	elif sentence[0]=='or':
@@ -127,6 +176,8 @@ def negation(sentence):
 
 for lines in sys.stdin:
 	sentences = eval(lines)
+	global iteration
+	iteration = 0
 	recursive(sentences)
 	print(myConditions[0])
 

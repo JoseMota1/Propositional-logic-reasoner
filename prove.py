@@ -1,15 +1,2 @@
-import subprocess
-p1 = subprocess.Popen(["cat", "file.log"], stdout=subprocess.PIPE)
-p2 = subprocess.Popen(["tail", "-1"], stdin=p1.stdout, stdout=subprocess.PIPE)
-p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-output,err = p2.communicate()
-
-import sys
-
-for line in sys.stdin:
-	
-	
-	
-	
-	
-
+# Resolution-based theorem prover for propositional logic
+# Assumes a CNF knowledge base

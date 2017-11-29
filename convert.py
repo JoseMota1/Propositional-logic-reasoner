@@ -2,15 +2,7 @@
 
 
 import sys
-#Vai ler do pipe cada coisa introduzida  e diferenciar cada um 
-
-
-for lines in sys.stdin:
-	print(lines)
-	sentences = eval(lines) 
-	recursive(sentences)
-
-
+#Vai ler do pipe cada coisa introduzida  e diferenciar cada um
 
 iteration = 1
 myConditions = list()
@@ -26,7 +18,7 @@ def recursive(line):
 		implication(line[1],line[2])
 
 	elif line[0]=='or' :
-		disjunction(line[1],line[2])	
+		disjunction(line[1],line[2])
 
 	elif line[0]=='and' :
 		conjunction(line[1],line[2])
@@ -49,26 +41,26 @@ def atom(sentence, value):
 		return True
 	return
 
-def neg_atom(sentence, value):	
+def neg_atom(sentence, value):
 	if len(sentence)==2 and sentence[0]=='not' and atom(sentence[1]):
 		if value == True:
 			myConditions[iteration].append(sentence)
 		return True
 	else:
-		return False		
+		return False
 	return
 
 
 def equivalence(sentence1, sentence2):
-	implication(sentence1,sentence2)	
+	implication(sentence1,sentence2)
 	implication(sentence2,sentence1)
 	return
-	
+
 def implication(sentence1, sentence2):
 	disjunction(('not', sentence1), sentence2);
-	return 
+	return
 
-def disjuntion(sentence1, sentence2):
+def disjunction(sentence1, sentence2):
 	if (atom(sentence1,0) or neg_atom(sentence1,0)) and (atom(sentence2,0) or neg_atom(sentence2,0)):
 		if (atom(sentence1,0) and neg_atom(sentence2,0)) or (atom(sentence2,0) and neg_atom(sentence1,0)):# ignora-se.
 			return
@@ -84,7 +76,7 @@ def distribution(sentence1, sentence2): # MERDAA
 	recursive(sentence1)
 
 	iteration = iteration+1
-	recursive(sentence2)	
+	recursive(sentence2)
 
 	iteration = iteration - 2
 
@@ -92,17 +84,17 @@ def distribution(sentence1, sentence2): # MERDAA
 		for j in range(0, len(myConditions[iteration-2])):
 			disjuntion(myConditions[iteration-1][i], myConditions[iteration-2][j])
 
-	
+
 	return
-	
+
 
 def conjunction(sentence1, sentence2):
-	if (sentence1 == sentence2)
+	if (sentence1 == sentence2):
 		recursive(sentence1)
-	else
+	else:
 		recursive(sentence1)
 		recursive(sentence2)
-	return 
+	return
 
 def negation(sentence):
 	if neg_atom(sentence,0):
@@ -111,7 +103,7 @@ def negation(sentence):
 	elif sentence[0]=='or':
 		conjunction(('not', sentence1), ('not', sentence2))
 
-	elif sentence[0]=='and': 
+	elif sentence[0]=='and':
 		disjunction(('not', sentence1), ('not', sentence2))
 
 	elif sentence[0]=='<=>' :
@@ -126,12 +118,7 @@ def negation(sentence):
 
 
 
-
-
-
-
-
-
-
-	
-	
+for lines in sys.stdin:
+	print(lines)
+	sentences = eval(lines)
+	recursive(sentences)

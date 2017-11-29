@@ -4,8 +4,9 @@
 import sys
 #Vai ler do pipe cada coisa introduzida  e diferenciar cada um
 
-iteration = 1
+iteration = 0
 myConditions = list()
+myConditions.append(list())
 
 def recursive(line):
 	if atom (line,True):
@@ -16,6 +17,7 @@ def recursive(line):
 
 	elif line[0]== '=>' :
 		implication(line[1],line[2])
+		print(line)
 
 	elif line[0]=='or' :
 		disjunction(line[1],line[2])
@@ -42,7 +44,7 @@ def atom(sentence, value):
 	return
 
 def neg_atom(sentence, value):
-	if len(sentence)==2 and sentence[0]=='not' and atom(sentence[1]):
+	if len(sentence)==2 and sentence[0]=='not' and atom(sentence[1],0):
 		if value == True:
 			myConditions[iteration].append(sentence)
 		return True
@@ -57,25 +59,31 @@ def equivalence(sentence1, sentence2):
 	return
 
 def implication(sentence1, sentence2):
-	disjunction(('not', sentence1), sentence2);
+	new1 = ('not', sentence1)
+	disjunction(new1, sentence2);
+	print('imp')
 	return
 
 def disjunction(sentence1, sentence2):
 	if (atom(sentence1,0) or neg_atom(sentence1,0)) and (atom(sentence2,0) or neg_atom(sentence2,0)):
-		if (atom(sentence1,0) and neg_atom(sentence2,0)) or (atom(sentence2,0) and neg_atom(sentence1,0)):# ignora-se.
+		if (atom(sentence1,0) and neg_atom(sentence2,0) and sentence2[1]==sentence1[0]) or (atom(sentence2,0) and neg_atom(sentence1,0) and sentence1[1]==sentence2[0]):# ignora-se.
 			return
 		else:
-			myConditions[iteration].append([sentence1, sentence2]) # not sure this is how its done
+			myConditions[iteration].append((sentence1, sentence2)) # not sure this is how its done
+			print('disj')
 	else:
 		distribution(sentence1, sentence2)
+		print('distr')
 	return
 
 
 def distribution(sentence1, sentence2): # MERDAA
 	iteration = iteration+1
+	myConditions.append(list())
 	recursive(sentence1)
 
 	iteration = iteration+1
+	myConditions.append(list())
 	recursive(sentence2)
 
 	iteration = iteration - 2
@@ -113,12 +121,12 @@ def negation(sentence):
 	elif sentence[0]=='=>' :
 		conjunction(sentence1, ('not', sentence2))
 
-
 	return
 
 
 
 for lines in sys.stdin:
-	print(lines)
 	sentences = eval(lines)
 	recursive(sentences)
+	print(myConditions[0])
+

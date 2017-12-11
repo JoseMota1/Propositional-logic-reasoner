@@ -9,10 +9,7 @@ def recursive(line, myC):
 
 	myConditions[iteration]=myC
 
-	if atom (line):
-		return True
-
-	elif line[0]=='<=>' :
+	if line[0]=='<=>' :
 		equivalence(line[0],line[1],line[2])
 
 	elif line[0]== '=>' :
@@ -30,16 +27,17 @@ def recursive(line, myC):
 			return True
 		elif negation(line[0],line[1]):
 			pass
+	else:
+		return True
 
 	return
 
 
 def atom(sentence):
-	if len(sentence)>1:
-		print('not')
-		print (sentence)
+	a = sentence[0] 
+	if a =='<=>' or a == '=>' or a == 'or' or a == 'and' or a== 'not':
 		return False
-	elif len(sentence)==1:
+	else:
 		return True
 	return
 
@@ -52,6 +50,7 @@ def neg_atom(sentence):
 
 def literal(sentence):
 	if (atom(sentence) or neg_atom(sentence)):
+		print('literal')
 		return True
 	else:
 		return False
@@ -69,22 +68,23 @@ def implication(cond, sentence1, sentence2):
 
 def disjunction(cond, sentence1, sentence2):
 	global iteration
+	print('disj')
 	if (atom(sentence1) and neg_atom(sentence2) and sentence2[1]==sentence1[0]) or (atom(sentence2) and neg_atom(sentence1) and sentence1[1]==sentence2[0]):
 		# disjunction of A and not A -> remove condition
 		removing = (cond,sentence1,sentence2)
-		myConditions[iteration].remove(removing)	
+		myConditions[iteration].remove(set(removing))
 		return
 	if (atom(sentence1) and atom(sentence2) and sentence2[1]==sentence1[0]) or (neg_atom(sentence2) and neg_atom(sentence1) and sentence1[1]==sentence2[0]):
 		# condition repeated -> remove one of them
 		removing = (cond,sentence1,sentence2)
-		myConditions[iteration].remove(removing)
-		myConditions[iteration].append(sentence1)	
+		myConditions[iteration].remove(set(removing))
+		myConditions[iteration].append(set(sentence1))	
 		return
 	else:	
 		removing = (cond,sentence1,sentence2)
-		myConditions[iteration].remove(removing)
+		myConditions[iteration].remove(set(removing))
 		appending = (sentence1, sentence2)
-		myConditions[iteration].append(appending)
+		myConditions[iteration].append(set(appending))
 
 
 	return
@@ -94,17 +94,17 @@ def conjunction(cond, sentence1, sentence2):
 	global iteration
 
 	if sentence1 == sentence2:
-		# to equal conjunctions
+		# two equal conjunctions
 		removing = (cond,sentence1,sentence2)
-		myConditions[iteration].remove(removing)
-		myConditions[iteration].append(sentence1)
+		myConditions[iteration].remove(set(removing))
+		myConditions[iteration].append(set(sentence1))
 
 	else:
 		removing = (cond,sentence1,sentence2)
-		myConditions[iteration].remove(removing)
+		myConditions[iteration].remove(set(removing))
 		myConditions[iteration+1]= myConditions[iteration]
-		myConditions[iteration].append(sentence1)
-		myConditions[iteration+1].append(sentence2)
+		myConditions[iteration].append(set(sentence1))
+		myConditions[iteration+1].append(set(sentence2))
 		iteration=iteration+1
 	return
 
@@ -113,9 +113,9 @@ def negation(cond, sentence):
 
 	if sentence[0]=='not':
 		removing = (cond,sentence)
-		myConditions[iteration].remove(removing)
+		myConditions[iteration].remove(set(removing))
 		appending = (sentence[1])
-		myConditions[iteration].append(appending)
+		myConditions[iteration].append(set(appending))
 		return True
 
 	elif sentence[0]=='or':
@@ -156,27 +156,30 @@ for line in sys.stdin:
 
 	j=0
 	while (j==0):
-		print('here')
 		for i in range(0, len(myConditions)):
-			print('test1')
+			print('here')
 			j=0
 			x = myConditions[i]
 			while(j==0):
 				for aux in range(0, len(x)):
 					j=1
-					if not literal(x[aux]):
-						recursive(x[aux], x)
+					if literal(x[aux]):
+						myfinalConditions.append(set(x[aux]))
+						print('here1')
+						if x[aux][0] == 'or':
+							print('mau')
 						print(x[aux])
-						print('test4')
-						j=0
 					else :
-						print('ye')
+						recursive(x[aux],x)
+						print(x[aux])
+						print('not literal')
+						j=0
+
+print(myfinalConditions)
+
 
 				
 
 
-	myfinalConditions.append(myConditions)
-
-		
-	print(myfinalConditions[0])
+	
 

@@ -59,16 +59,15 @@ def equivalence(cond, sentence1, sentence2, myConditions):
 
 	print('equi1', myConditions)
 
-	a=copy.copy(myConditions)
-	b=copy.copy(myConditions)
-	myConditions.clear()
+	a=list(copy.deepcopy(myConditions))
+	b=list(copy.deepcopy(myConditions))
+
+	del myConditions[:]
+
+	myConditions.append([a]+[b])
+
 	recursive(new1, a)
 	recursive(new2, b)
-
-
-	barra_n = list('\n')
-
-	myConditions.append(a + barra_n + b)
 	print('HHHHHH', a)
 	print('HHHHHH', b)
 	print('this is ' , myConditions)
@@ -97,6 +96,8 @@ def disjunction(cond, sentence1, sentence2, myConditions):
 		return
 
 	else:
+
+		print('disj1', myConditions)	
 		if literal(sentence1):
 			myConditions.append(sentence1)
 			print('hhhhh')
@@ -124,7 +125,7 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 
 	aux = 0
 	if( literal(sentence1) and literal(sentence2) ):
-		print('adsndfsc')
+		print('conjliteral')
 		if sentence1 == sentence2:
 			# two equal conjunctions
 			myConditions.append(sentence1)
@@ -137,17 +138,18 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 				return 
 				
 		if  neg_atom(sentence2) and atom(sentence1):
-			print('wefdkjs')
 			if sentence1 == sentence2[1]:
-				print('aaaa0')
 				aux=1
 				return 
 	
 	if (aux==0):	
-		print('3')
+		print('conj not literal')
 
-		aa=copy.copy(myConditions)
-		bb=copy.copy(myConditions)
+		aa=list(copy.deepcopy(myConditions))
+		bb=list(copy.deepcopy(myConditions))
+		del myConditions[:]
+
+		myConditions.append([aa] + [bb])
 
 		if literal(sentence1):
 			aa.append(sentence1)
@@ -163,8 +165,7 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 
 
 
-		barra_n = list('\n')
-		myConditions.append(aa + barra_n + bb)
+
 
 		print('IIIII', aa)
 		print('IIIIIII', bb)
@@ -208,17 +209,17 @@ def negation(cond, sentence, myConditions):
 		new3 = ('or', sentence[1],sentence[2])
 
 
-		aaa=copy.copy(myConditions)
-		bbb=copy.copy(myConditions)
-		ccc=copy.copy(myConditions)
-		myConditions.clear()
+		aaa=list(copy.deepcopy(myConditions))
+		bbb=list(copy.deepcopy(myConditions))
+		ccc=list(copy.deepcopy(myConditions))
+		del myConditions[:]
 
 		recursive(new1, aaa)
 		recursive(new2, bbb)
 		recursive(new3, ccc)
 		barra_n = list('\n')
 
-		myConditions.append(aaa + barra_n + bbb + barra_n + ccc)
+		myConditions.append(aaa + bbb + ccc)
 		print('KJJJJJJ', aaa)
 		print('KJJJJJJ', bbb)
 		print('KJJJJJJ', ccc)

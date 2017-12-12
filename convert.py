@@ -61,19 +61,17 @@ def equivalence(cond, sentence1, sentence2, myConditions):
 
 	a=copy.copy(myConditions)
 	b=copy.copy(myConditions)
-	del myConditions[:]
+	myConditions.clear()
 	recursive(new1, a)
 	recursive(new2, b)
 
-	myConditions.append(copy.copy(a))
-	c = list('\n')
-	myConditions.append(c)
-	myConditions.append(copy.copy(b))
+
+	barra_n = list('\n')
+
+	myConditions.append(a + barra_n + b)
 	print('HHHHHH', a)
 	print('HHHHHH', b)
-	del a[:]
-	del b[:]
-
+	print('this is ' , myConditions)
 
 	return
 
@@ -147,9 +145,9 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 	
 	if (aux==0):	
 		print('3')
+
 		aa=copy.copy(myConditions)
 		bb=copy.copy(myConditions)
-		del myConditions[:]
 
 		if literal(sentence1):
 			aa.append(sentence1)
@@ -163,15 +161,14 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 		elif not literal(sentence2):			
 			recursive(sentence2, bb)
 
-		myConditions.append(copy.copy(aa))
-		cc = list('\n')
-		myConditions.append(cc)
-		myConditions.append(copy.copy(bb))
+
+
+		barra_n = list('\n')
+		myConditions.append(aa + barra_n + bb)
 
 		print('IIIII', aa)
 		print('IIIIIII', bb)
-		del aa[:]
-		del bb[:]
+
 		print('conj2', myConditions)
 
 	
@@ -213,26 +210,19 @@ def negation(cond, sentence, myConditions):
 
 		aaa=copy.copy(myConditions)
 		bbb=copy.copy(myConditions)
-		ddd=copy.copy(myConditions)
-		del myConditions[:]
+		ccc=copy.copy(myConditions)
+		myConditions.clear()
 
 		recursive(new1, aaa)
 		recursive(new2, bbb)
-		recursive(new3, ddd)
+		recursive(new3, ccc)
+		barra_n = list('\n')
 
-		ccc = list('\n')
-		myConditions.append(copy.copy(aaa))
-		myConditions.append(ccc)
-		myConditions.append(copy.copy(bbb))
-		myConditions.append(ccc)
-		myConditions.append(copy.copy(ddd))
+		myConditions.append(aaa + barra_n + bbb + barra_n + ccc)
 		print('KJJJJJJ', aaa)
 		print('KJJJJJJ', bbb)
-		print('KJJJJJJ', ddd)
+		print('KJJJJJJ', ccc)
 
-		del aaa[:]
-		del bbb[:]
-		del ddd[:]
 		print('conj2', myConditions)
 
 
@@ -245,21 +235,16 @@ def negation(cond, sentence, myConditions):
 
 
 
-
 myfinalConditions = list()
-
+myConditionsaux = list()
 for line in sys.stdin:
 	sentence = eval(line)
-	myConditions = list()
-	recursive(sentence, myConditions)
-	print('final', myConditions)
-	myfinalConditions.append(copy.copy(myConditions))
-	del myConditions[:]
+	recursive(sentence, myConditionsaux)
+	myfinalConditions.append(copy.copy(myConditionsaux))
+	myConditionsaux.clear()
 
-print('HERE', myfinalConditions)
+print('final2', myfinalConditions)
 
-
-				
 
 
 	

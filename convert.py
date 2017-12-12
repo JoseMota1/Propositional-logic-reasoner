@@ -69,10 +69,11 @@ def equivalence(cond, sentence1, sentence2, myConditions):
 	c = list('\n')
 	myConditions.append(c)
 	myConditions.append(copy.copy(b))
+	print('HHHHHH', a)
+	print('HHHHHH', b)
 	del a[:]
 	del b[:]
 
-	print('equi2', myConditions)
 
 	return
 
@@ -166,6 +167,9 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 		cc = list('\n')
 		myConditions.append(cc)
 		myConditions.append(copy.copy(bb))
+
+		print('IIIII', aa)
+		print('IIIIIII', bb)
 		del aa[:]
 		del bb[:]
 		print('conj2', myConditions)
@@ -222,6 +226,10 @@ def negation(cond, sentence, myConditions):
 		myConditions.append(copy.copy(bbb))
 		myConditions.append(ccc)
 		myConditions.append(copy.copy(ddd))
+		print('KJJJJJJ', aaa)
+		print('KJJJJJJ', bbb)
+		print('KJJJJJJ', ddd)
+
 		del aaa[:]
 		del bbb[:]
 		del ddd[:]

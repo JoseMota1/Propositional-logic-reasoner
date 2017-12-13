@@ -32,7 +32,7 @@ def recursive(line, myConditions):
 
 
 def atom(sentence):
-	a = sentence[0] 
+	a = sentence[0]
 	if a =='<=>' or a == '=>' or a == 'or' or a == 'and' or a== 'not':
 		return False
 	else:
@@ -79,7 +79,7 @@ def disjunction(cond, sentence1, sentence2, myConditions):
 
 	if (atom(sentence1) and atom(sentence2) and sentence2[0]==sentence1[0]) or (neg_atom(sentence2) and neg_atom(sentence1) and sentence1[1]==sentence2[1]):
 	# condition repeated -> remove one of them
-		myConditions.append(sentence1)	
+		myConditions.append(sentence1)
 		return
 
 	else:
@@ -88,11 +88,11 @@ def disjunction(cond, sentence1, sentence2, myConditions):
 
 		if literal(sentence2):
 			myConditions.append(sentence2)
-		
+
 		if not literal(sentence1):
 			recursive(sentence1, myConditions)
 
-		if not literal(sentence2):	
+		if not literal(sentence2):
 			recursive(sentence2, myConditions)
 			return
 
@@ -111,17 +111,13 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 		if  neg_atom(sentence1) and atom(sentence2):
 			if sentence2 == sentence1[1]:
 				return
-				
+
 		if  neg_atom(sentence2) and atom(sentence1):
 			if sentence1 == sentence2[1]:
 				return
-	
+
 	a = list(myConditions)
 	b = list(myConditions)
-	del myConditions[:]
-
-	myConditions.append(a)
-	myConditions.append(b)
 
 	print('s1', sentence1, 's2', sentence2)
 	print('conj2 b4', myConditions)
@@ -132,12 +128,15 @@ def conjunction(cond, sentence1, sentence2, myConditions):
 	recursive(sentence1, a)
 	recursive(sentence2, b)
 
+	del myConditions[:]
+	myConditions.append(a)
+	myConditions.append(b)
 
 	print('a after', a)
 	print('b after', b)
 
 	print('conj2 after', myConditions)
-	
+
 
 def negation(cond, sentence, myConditions):
 	print('neg', myConditions)
@@ -188,15 +187,13 @@ for line in sys.stdin:
 	myfinalConditions.append(copy.copy(myConditionsaux))
 	myConditionsaux.clear()
 
+print('myfinalConditions', myfinalConditions)
+
 print(len(myfinalConditions[0]))
-for e in myfinalConditions:
-	if len(myfinalConditions[0]) == 0:
-		print('[]')
-	elif len(myfinalConditions[0]) == 1:
-		print(e)
-	else:
-		for i in e:
-			print (i)
-
-	
-
+"""for e in myfinalConditions:
+	while len(e) == 1:
+		if len(e[0] == 1):
+			e = e[0]
+		else:
+			for i in e:
+				print (i)"""

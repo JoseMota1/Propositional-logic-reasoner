@@ -184,16 +184,23 @@ myConditionsaux = list()
 for line in sys.stdin:
 	sentence = eval(line)
 	recursive(sentence, myConditionsaux)
-	myfinalConditions.append(copy.copy(myConditionsaux))
+	myfinalConditions.append(copy.deepcopy(myConditionsaux))
 	myConditionsaux.clear()
 
 print('myfinalConditions', myfinalConditions)
 
 print(len(myfinalConditions[0]))
-"""for e in myfinalConditions:
-	while len(e) == 1:
-		if len(e[0] == 1):
-			e = e[0]
-		else:
-			for i in e:
-				print (i)"""
+
+"""for i in range(0, len(myfinalConditions[0])):
+	for a in myfinalConditions[i]:
+		i = a
+	print('a', a) 
+"""
+
+
+
+
+
+
+
+

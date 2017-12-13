@@ -58,7 +58,6 @@ def equivalence(cond, sentence1, sentence2, myConditions):
 	new2 = ('=>', sentence2,sentence1)
 
 	conjunction('and', new1, new2, myConditions)
-	print('equi1', myConditions)
 
 	return
 
@@ -75,7 +74,7 @@ def implication(cond, sentence1, sentence2, myConditions):
 	return
 
 def disjunction(cond, sentence1, sentence2, myConditions):
-	print('disj', myConditions)
+	print('disj', sentence1, sentence2, myConditions)
 
 
 	if (atom(sentence1) and atom(sentence2) and sentence2[0]==sentence1[0]) or (neg_atom(sentence2) and neg_atom(sentence1) and sentence1[1]==sentence2[1]):
@@ -84,82 +83,60 @@ def disjunction(cond, sentence1, sentence2, myConditions):
 		return
 
 	else:
-
-		print('disj1', myConditions)	
 		if literal(sentence1):
 			myConditions.append(sentence1)
-			print('hhhhh')
-		
-		if not literal(sentence1):
-			recursive(sentence1, myConditions)
-			print('hhhhh2')
 
 		if literal(sentence2):
 			myConditions.append(sentence2)
-			print('hhhhh3')
-			return
+		
+		if not literal(sentence1):
+			recursive(sentence1, myConditions)
 
 		if not literal(sentence2):	
 			recursive(sentence2, myConditions)
-			print('hhhhh4')
 			return
 
-		print('disj2', myConditions)	
 		return
 
 
 def conjunction(cond, sentence1, sentence2, myConditions):
 	print('conj', myConditions)
 
-	aux = 0
 	if( literal(sentence1) and literal(sentence2) ):
-		print('conjliteral')
 		if sentence1 == sentence2:
 			# two equal conjunctions
 			myConditions.append(sentence1)
-			aux=1
 			return
 
 		if  neg_atom(sentence1) and atom(sentence2):
 			if sentence2 == sentence1[1]:
-				aux=1
-				return 
+				return
 				
 		if  neg_atom(sentence2) and atom(sentence1):
 			if sentence1 == sentence2[1]:
-				aux=1
-				return 
+				return
 	
-	if (aux==0):	
-		print('conj not literal')
+	a = list(myConditions)
+	b = list(myConditions)
+	del myConditions[:]
 
-		aa=list(copy.deepcopy(myConditions))
-		bb=list(copy.deepcopy(myConditions))
-		del myConditions[:]
+	myConditions.append(a)
+	myConditions.append(b)
 
-		myConditions.append([aa] + [bb])
+	print('s1', sentence1, 's2', sentence2)
+	print('conj2 b4', myConditions)
 
-		if literal(sentence1):
-			aa.append(sentence1)
+	print('a b4', a)
+	print('b b4', b)
 
-		elif not literal(sentence1):
-			recursive(sentence1, aa)
-
-		if literal(sentence2):
-			bb.append(sentence2)
-
-		elif not literal(sentence2):			
-			recursive(sentence2, bb)
+	recursive(sentence1, a)
+	recursive(sentence2, b)
 
 
+	print('a after', a)
+	print('b after', b)
 
-
-
-		print('IIIII', aa)
-		print('IIIIIII', bb)
-
-		print('conj2', myConditions)
-
+	print('conj2 after', myConditions)
 	
 
 def negation(cond, sentence, myConditions):
@@ -178,14 +155,12 @@ def negation(cond, sentence, myConditions):
 	elif sentence[0]=='or':
 		new1 = ('not', sentence[1])
 		new2 = ('not', sentence[2])
-		print('not-or', sentence)
 		conjunction('and',new1, new2, myConditions)
 
 
 	elif sentence[0]=='and':
 		new1 = ('not', sentence[1])
 		new2 = ('not', sentence[2])
-		print('not-and', sentence)
 		disjunction('or', new1, new2, myConditions)
 
 
@@ -195,13 +170,11 @@ def negation(cond, sentence, myConditions):
 		negation('not', new1, myConditions)
 		negation('not', new2, myConditions)
 
-		print('conj2', myConditions)
 
 
 	elif sentence[0]=='=>' :
 		new = ('not', sentence[2])
 		new2 = ('and', sentence[1], new)
-		print('not-imp', myConditions)
 		recursive(new2, myConditions)
 	return
 
@@ -215,9 +188,15 @@ for line in sys.stdin:
 	myfinalConditions.append(copy.copy(myConditionsaux))
 	myConditionsaux.clear()
 
-print('final2', myfinalConditions)
-
-
+print(len(myfinalConditions[0]))
+for e in myfinalConditions:
+	if len(myfinalConditions[0]) == 0:
+		print('[]')
+	elif len(myfinalConditions[0]) == 1:
+		print(e)
+	else:
+		for i in e:
+			print (i)
 
 	
 

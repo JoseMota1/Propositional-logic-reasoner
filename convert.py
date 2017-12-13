@@ -57,20 +57,8 @@ def equivalence(cond, sentence1, sentence2, myConditions):
 	new1 = ('=>', sentence1,sentence2)
 	new2 = ('=>', sentence2,sentence1)
 
+	conjunction('and', new1, new2, myConditions)
 	print('equi1', myConditions)
-
-	a=list(copy.deepcopy(myConditions))
-	b=list(copy.deepcopy(myConditions))
-
-	del myConditions[:]
-
-	myConditions.append([a]+[b])
-
-	recursive(new1, a)
-	recursive(new2, b)
-	print('HHHHHH', a)
-	print('HHHHHH', b)
-	print('this is ' , myConditions)
 
 	return
 
@@ -202,27 +190,10 @@ def negation(cond, sentence, myConditions):
 
 
 	elif sentence[0]=='<=>' :
-		n1 = ('not', sentence[1])
-		n2 = ('not', sentence[2])
-		new1 = ('or', n1, sentence[1])
-		new2 = ('or', n2, sentence[2])
-		new3 = ('or', sentence[1],sentence[2])
-
-
-		aaa=list(copy.deepcopy(myConditions))
-		bbb=list(copy.deepcopy(myConditions))
-		ccc=list(copy.deepcopy(myConditions))
-		del myConditions[:]
-
-		recursive(new1, aaa)
-		recursive(new2, bbb)
-		recursive(new3, ccc)
-		barra_n = list('\n')
-
-		myConditions.append(aaa + bbb + ccc)
-		print('KJJJJJJ', aaa)
-		print('KJJJJJJ', bbb)
-		print('KJJJJJJ', ccc)
+		new1 = ('=>', sentence[1], sentence[2])
+		new2 = ('=>', sentence[2], sentence[1])
+		negation('not', new1, myConditions)
+		negation('not', new2, myConditions)
 
 		print('conj2', myConditions)
 

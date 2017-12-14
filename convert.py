@@ -7,38 +7,40 @@ import copy
 
 isConjunction = False
 
-def recursive(line, myConditions):
-	print('recursive', myConditions)
+def recursive(sentence):
+	for line in sentence
+		while equi:
+			equi=False
+			if line[0] == '<=>' :
+				equivalence(line[0],line[1],line[2], sentence)
+				equi=True
 
-	if line[0] == '<=>' :
-		equivalence(line[0],line[1],line[2], myConditions)
+		elif line[0] == '=>' :
+			implication(line[0],line[1],line[2], myConditions)
 
-	elif line[0] == '=>' :
-		implication(line[0],line[1],line[2], myConditions)
+		elif line[0] == 'or' :
+			disjunction(line[0],line[1],line[2], myConditions)
 
-	elif line[0] == 'or' :
-		disjunction(line[0],line[1],line[2], myConditions)
+		elif line[0] == 'and' :
+			conjunction(line[0],line[1],line[2], myConditions)
 
-	elif line[0] == 'and' :
-		conjunction(line[0],line[1],line[2], myConditions)
+		elif line[0] == 'not' :
+			if neg_atom(line):
+				myConditions.append(line)
 
-	elif line[0] == 'not' :
-		if neg_atom(line):
-			myConditions.append(line)
-
+			else:
+				negation(line[0],line[1], myConditions)
 		else:
-			negation(line[0],line[1], myConditions)
-	else:
-		global isConjunction
-		if isConjunction:
-			if len(myConditions) > 1:
-				for condition in myConditions:
-					condition.append(line)
+			global isConjunction
+			if isConjunction:
+				if len(myConditions) > 1:
+					for condition in myConditions:
+						condition.append(line)
+				else:
+					myConditions.append(line)
+				isConjunction = False
 			else:
 				myConditions.append(line)
-			isConjunction = False
-		else:
-			myConditions.append(line)
 
 
 
@@ -65,22 +67,19 @@ def literal(sentence):
 
 
 def equivalence(cond, sentence1, sentence2, myConditions):
+	original = (cond, sentence1, sentence2)
 	print('equivalence', myConditions)
-	new1 = ('=>', sentence1,sentence2)
-	new2 = ('=>', sentence2,sentence1)
+	sentence1 = ('=>', sentence1,sentence2)
+	sentence2 = ('=>', sentence2,sentence1)
+	cond = 'and'
+	
 
-	conjunction('and', new1, new2, myConditions)
 
 def implication(cond, sentence1, sentence2, myConditions):
 	print('implication', myConditions)
-
-	if sentence1[0] == 'not':
-		new = sentence1[1]
-	else:
-		new = ('not', sentence1)
-
-	disjunction('or', new, sentence2, myConditions)
-
+	new = ('not', sentence1)
+	cond = 'or'
+	sentence1 = new
 
 def disjunction(cond, sentence1, sentence2, myConditions):
 	print('disjunction', myConditions)
@@ -172,12 +171,12 @@ def negation(cond, sentence, myConditions):
 	print('negation', myConditions)
 
 	if atom(sentence):
-		new = ('not', sentence)
-		myConditions.append(new)
+		pass	
 
 	elif sentence[0]=='not':
 		if atom(sentence[1]):
-			myConditions.append(sentence[1])
+			cond = []
+			sentence = sentence[1]
 		else:
 			recursive(sentence, myConditions)
 
@@ -192,19 +191,6 @@ def negation(cond, sentence, myConditions):
 		new2 = ('not', sentence[2])
 		disjunction('or', new1, new2, myConditions)
 
-
-	elif sentence[0]=='<=>' :
-		new1 = ('=>', sentence[1], sentence[2])
-		new2 = ('=>', sentence[2], sentence[1])
-		negation('not', new1, myConditions)
-		negation('not', new2, myConditions)
-
-
-
-	elif sentence[0]=='=>' :
-		new = ('not', sentence[2])
-		new2 = ('and', sentence[1], new)
-		recursive(new2, myConditions)
 	return
 
 

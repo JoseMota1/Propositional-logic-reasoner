@@ -116,40 +116,6 @@ def implication(cond, sentence1, sentence2):
 	cond = 'or'
 	sentence1 = new
 
-def disjunction(cond, sentence1, sentence2):
-	print('disjunction', myConditions)
-
-	elif (literal(sentence1) and sentence2[0]=='and'):
-		new1=('or', sentence1, sentence2[1])
-		new2=('or', sentence1, sentence2[2])
-		cond='and'
-		sentence1=new1
-		sentence2=new2
-		return
-	elif (literal(sentence2) and sentence1[0]=='and'):
-		new1=('or', sentence2, sentence1[1])
-		new2=('or', sentence2, sentence1[2])
-		cond='and'
-		sentence1=new1
-		sentence2=new2
-		return
-
-	elif(sentence1[0]=='and' and sentence2[0]='and'):
-		new1=('or', sentence1[1], sentence2[1])
-		new2=('or', sentence1[1], sentence2[2])
-		new3=('or', sentence1[2], sentence2[1])
-		new4=('or', sentence1[2], sentence2[2])
-		n1 =('and', new1, new2)
-		n2 =('and', new3, new4)
-		sentence1=n1
-		sentence2=n2
-		cond='and'
-		return
-
-	else:
-		cond=''
-		
-
 def negation(cond, sentence):
 	if atom(sentence):
 		return	
@@ -170,6 +136,125 @@ def negation(cond, sentence):
 		new2 = ('not', sentence[2])
 		sentence = ('or', new1, new2)
 	return
+
+
+def disjunction(cond, sentence1, sentence2):
+	print('disjunction', myConditions)
+
+	if (literal(sentence1) and literal(sentence2)):
+		cond = ''
+
+
+	elif (literal(sentence1)):
+		new1=('or', sentence1, sentence2[1])
+		new2=('or', sentence1, sentence2[2])
+		sentence1=new1
+		sentence2=new2
+		if sentence2[0]=='and':
+			cond='and'
+		elif sentence2[0]=='or':
+			cond='or'
+
+
+	elif (literal(sentence2)):
+		new1=('or', sentence2, sentence1[1])
+		new2=('or', sentence2, sentence1[2])
+		sentence1=new1
+		sentence2=new2
+		if sentence1[0]=='and':
+			cond='and'
+		elif sentence1[0]=='or':
+			cond='or'
+
+
+	elif sentence1[0]=='and':
+		if sentence2[0] == 'or':
+			new1=('or', sentence1[1], sentence2)
+			new2=('or', sentence1[2], sentence2)
+			sentence1=new1
+			sentence2=new2
+			cond='and'
+			return
+
+		elif sentence2[0] == 'and':
+			new1=('or', sentence1[1], sentence2[1])
+			new2=('or', sentence1[2], sentence2[1])
+			new3=('or', sentence1[1], sentence2[2])
+			new4=('or', sentence1[2], sentence2[2])
+			sentence1=('and'new1, new2)
+			sentence2=('and', new3, new4)
+			cond = 'and'
+			return
+
+	elif sentence1[0]=='or':
+		if sentence2[0]== 'and':
+			new1=('or', sentence2[1], sentence1)
+			new2=('or', sentence2[2], sentence1)
+			sentence1=new1
+			sentence2=new2
+			cond='and'
+			return
+
+	else:
+		pass
+
+
+
+def conjunction(cond, sentence1, sentence2, myConditions):
+	print('conjunction', myConditions)
+ 
+ 	if( literal(sentence1) and literal(sentence2) ):
+ 		if sentence1 == sentence2:
+ 			# two equal conjunctions
+ 			myConditions.append(sentence1)
+ 			return
+		if  neg_atom(sentence1) and atom(sentence2):
+			if sentence2 == sentence1[1]:
+				return
+
+ 		if  neg_atom(sentence2) and atom(sentence1):
+ 			if sentence1 == sentence2[1]:
+ 				return
+  
+  	a = list(myConditions)
+  	b = list(myConditions)
+  
+  	print('s1', sentence1, 's2', sentence2)
+  
+  	print('a before', a)
+  	print('b before', b)
+  
+  	global isConjunction
+  	isConjunction = True
+  	recursive(sentence1, a)
+  	isConjunction = True
+  	recursive(sentence2, b)
+  
+  	print('a after', a)
+  	print('b after', b)
+  
+  	print('myConditions before clear', myConditions)
+  	myConditions.clear()
+  	print('myConditions afer clear', myConditions)
+  	# print('a.append(b)', a)
+  	if isinstance(a[0], list) and isinstance(b[0], list):
+  		myConditions.extend(a + b)
+  		print('myConditions.extend(a + b)', myConditions)
+  	elif isinstance(a[0], list):
+  		myConditions.extend(a + [b])
+  		print('myConditions.extend(a + [b])', myConditions)
+  	elif isinstance(b[0], list):
+  		myConditions.extend([a] + b)
+  		print('myConditions.extend([a] + b)', myConditions)
+  	else:
+  		myConditions.extend([a] + [b])
+  		print('myConditions.extend([a] + [b])', myConditions)
+  	# global nconjuntions
+  	# nconjuntions = nconjuntions + 1
+  
+  
+  	# print('conjunction after', myConditions)
+  
 
 
 nlines = 0

@@ -42,42 +42,24 @@ def recursive(sentence):
 				disjunction(line[0],line[1],line[2])
 				disj=True
 
-	conj=True
-	while conj:
-		conj=False
-		hold=list()
+
+	myConditions=list()
+	not_finished=True
+	while not_finished:
+		not_finished=False
 		for line in sentence:
-			hold.extend(line)
-			if line[0] == 'and' :
-				if (literal(line[1]) and literal(line[2])):
-					aux=list(hold)
-					aux2=list(hold)
-					aux.extend(line[1])
-					aux2.extend(line[2])
-					return
-				elif literal(line[1])
-					aux=list(hold)
-					aux2=list(hold)
-					aux3=list(hold)
-					aux.extend(line[1])
-					aux2.extend(line[2][0])
-					aux3.extend(line[2][1])
-					return
-				elif literal(line[2])
-					aux=list(hold)
-					aux2=list(hold)
-					aux3=list(hold)
-					aux.extend(line[2])
-					aux2.extend(line[1][0])
-					aux3.extend(line[1][1])
-					return
-				else
-					
+			if literal(line):
+				myConditions.extend(line)
+			elif line[0] == 'or':
+				myConditions.extend(line[1])
+				myConditions.extend(line[2])
+				not_finished=True
+			else:
+				finishing(line[0],line[1],line[2], myConditions)
+				not_finished=True
 
-				disj=True
-
-
-
+		sentence=list(myConditions)
+			
 
 
 def atom(sentence):
@@ -122,7 +104,7 @@ def negation(cond, sentence):
 
 	cond = ''
 
-	elif sentence[0]=='not':
+	if sentence[0]=='not':
 		sentence = sentence[1]
 
 	elif sentence[0] == 'or':		
@@ -139,7 +121,6 @@ def negation(cond, sentence):
 
 
 def disjunction(cond, sentence1, sentence2):
-	print('disjunction', myConditions)
 
 	if (literal(sentence1) and literal(sentence2)):
 		cond = ''
@@ -181,7 +162,7 @@ def disjunction(cond, sentence1, sentence2):
 			new2=('or', sentence1[2], sentence2[1])
 			new3=('or', sentence1[1], sentence2[2])
 			new4=('or', sentence1[2], sentence2[2])
-			sentence1=('and'new1, new2)
+			sentence1=('and',new1, new2)
 			sentence2=('and', new3, new4)
 			cond = 'and'
 			return
@@ -198,62 +179,32 @@ def disjunction(cond, sentence1, sentence2):
 	else:
 		pass
 
+  
+def finishing(cond,sentence1, sentence2, myConditions):
+	a=list(myConditions)
+	b=list(myConditions)
+	a.extend(line[1])
+	b.extend(line[2])
+
+	print('myConditions before clear', myConditions)
+	myConditions.clear()
+	print('myConditions afer clear', myConditions)
+	if isinstance(a[0], list) and isinstance(b[0], list):
+		myConditions.extend(a + b)
+		print('myConditions.extend(a + b)', myConditions)
+	elif isinstance(a[0], list):
+		myConditions.extend(a + [b])
+		print('myConditions.extend(a + [b])', myConditions)
+	elif isinstance(b[0], list):
+		myConditions.extend([a] + b)
+		print('myConditions.extend([a] + b)', myConditions)
+	else:
+		myConditions.extend([a] + [b])
+		print('myConditions.extend([a] + [b])', myConditions)
 
 
-def conjunction(cond, sentence1, sentence2, myConditions):
-	print('conjunction', myConditions)
- 
- 	if( literal(sentence1) and literal(sentence2) ):
- 		if sentence1 == sentence2:
- 			# two equal conjunctions
- 			myConditions.append(sentence1)
- 			return
-		if  neg_atom(sentence1) and atom(sentence2):
-			if sentence2 == sentence1[1]:
-				return
 
- 		if  neg_atom(sentence2) and atom(sentence1):
- 			if sentence1 == sentence2[1]:
- 				return
-  
-  	a = list(myConditions)
-  	b = list(myConditions)
-  
-  	print('s1', sentence1, 's2', sentence2)
-  
-  	print('a before', a)
-  	print('b before', b)
-  
-  	global isConjunction
-  	isConjunction = True
-  	recursive(sentence1, a)
-  	isConjunction = True
-  	recursive(sentence2, b)
-  
-  	print('a after', a)
-  	print('b after', b)
-  
-  	print('myConditions before clear', myConditions)
-  	myConditions.clear()
-  	print('myConditions afer clear', myConditions)
-  	# print('a.append(b)', a)
-  	if isinstance(a[0], list) and isinstance(b[0], list):
-  		myConditions.extend(a + b)
-  		print('myConditions.extend(a + b)', myConditions)
-  	elif isinstance(a[0], list):
-  		myConditions.extend(a + [b])
-  		print('myConditions.extend(a + [b])', myConditions)
-  	elif isinstance(b[0], list):
-  		myConditions.extend([a] + b)
-  		print('myConditions.extend([a] + b)', myConditions)
-  	else:
-  		myConditions.extend([a] + [b])
-  		print('myConditions.extend([a] + [b])', myConditions)
-  	# global nconjuntions
-  	# nconjuntions = nconjuntions + 1
-  
-  
-  	# print('conjunction after', myConditions)
+
   
 
 

@@ -7,58 +7,56 @@ import copy
 
 isConjunction = False
 
-def recursive(s, myConditions):
+def convert(sentence, myConditions):
 
-	print('1', s)
-	equivalence(s)
+	print('1', sentence)
+	equivalence(sentence)
 
-	print('2', s)
-	implication(s)
+	print('2', sentence)
+	implication(sentence)
 
-	print('3', s)
-	negation(s)
+	print('3', sentence)
+	negation(sentence)
 
-	print('4', s)
-	disjunction(s)
+	print('4', sentence)
+	disjunction(sentence)
 	
-	print('5', s)
+	print('5', sentence)
 
 
 	a = 0
 	o = 0
 	for cond in sentence:
-		if cond=='and':
+		if cond == 'and':
 			a = a + 1
 
-		elif cond=='or':
-			o = o + 1
+		elif cond == 'or':
+			o = 1
 
 		elif o == 1:
-			or1 = cond
-			o = o + 1 
-
-		elif o == 2:
-			or2 = cond
-			myConditions.extend(or1)
-			myConditions.extend(or2)
-			o = 0
+			if cond != 'and' or cond != 'or':
+				myConditions.extend(cond)
+				o = 0
 
 		elif a == 1:
-			a1 = cond
-			a = a + 1 
+			if cond != 'and' or cond != 'or':
+				a1 = cond
+				a = a + 1 
 
 		elif a == 2:
-			a2 = cond
-			a=list(myConditions)
-			b=list(myConditions)
-			a.extend(a1)
-			b.extend(a2)
-			myConditions.clear()
-			myConditions.extend(a + b)
-			a = 0
+			if cond != 'and' or cond != 'or':
+				a2 = cond
+				a=list(myConditions)
+				b=list(myConditions)
+				a.extend(a1)
+				b.extend(a2)
+				myConditions.clear()
+				myConditions.extend(a + b)
+				a = 0
 
 		else:
-			myConditions.extend(sentence)
+			if cond != 'or':
+				myConditions.extend(cond)
 
 
 
@@ -248,10 +246,12 @@ for line in sys.stdin:
 	new_line = "".join(s)
 
 	sentence= list(eval(new_line))
-	recursive(sentence, myConditions)
+	convert(sentence, myConditions)
 
 
 	nlines = nlines + 1
+
+print('HAAAAAAA?',myConditions)
 
 #print('myFinalConditions', myFinalConditions)
 

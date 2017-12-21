@@ -96,7 +96,7 @@ def equivalence(sentence):
 		sentence[2] = ['=>', aux2, aux1]
 
 	for cond in sentence[1:]:
-		if not literal(cond):
+		if len(cond)>1:
 			equivalence(cond)
 
 def implication(sentence):
@@ -107,13 +107,14 @@ def implication(sentence):
 		sentence[1] = aux	
 
 	for cond in sentence[1:]:
-		if not literal(cond):
+		if len(cond)>1:
 			implication(cond)
 
 def negation(sentence):
 	print('negation',sentence)
 	if(sentence[0] == 'not'):
-		if not atom(sentence[1]):
+		print('entered', sentence)
+		if not neg_atom(sentence):
 			print('sentencemerda' , sentence[1])
 			aux = sentence[1]
 			print('here', aux[0])
@@ -152,7 +153,7 @@ def negation(sentence):
 				sentence.extend(sentence2)
 	
 	for cond in sentence[1:]:
-		if not literal(cond):
+		if len(cond)>1:
 			negation(cond)
 		
 

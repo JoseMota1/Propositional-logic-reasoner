@@ -10,16 +10,13 @@ isConjunction = False
 def recursive(s):
 
 	print('1', s)
-	if not literal(s):
-		equivalence(s)
+	equivalence(s)
 
 	print('2', s)
-	if not literal(s):
-		implication(s)
+	implication(s)
 
 	print('3', s)
-	if not literal(s):
-		negation(s)
+	negation(s)
 
 	print('4', s)
 	if not literal(s):
@@ -59,18 +56,25 @@ def recursive(s):
 
 
 def atom(sentence):
-	print('a',sentence)
-	a = sentence[0]
-	print(a)
-	if (a =='<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
+	if len(sentence)>1:
 		return False
+	elif len(sentence)==1:
+		a = sentence[0]
+		if (a =='<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
+			return False
+		else:
+			print('IS ATOM',sentence)
+			return True
 	else:
-		return True
+		return False
 
 
 
 def neg_atom(sentence):
-	if sentence[0]=='not' and atom(sentence[1]):
+	if len(sentence) > 2:
+		return False
+	elif len(sentence) == 2 and sentence[0] == 'not' and atom(sentence[1]):
+		print('NEGATOM',sentence)
 		return True
 	else:
 		return False
@@ -78,7 +82,6 @@ def neg_atom(sentence):
 
 def literal(sentence):
 	if (atom(sentence) or neg_atom(sentence)):
-		print('is LITERAL', sentence)
 		return True
 	else:
 		return False
@@ -91,26 +94,21 @@ def equivalence(sentence):
 		sentence[0] = 'and'
 		sentence[1] = ['=>', aux1, aux2]
 		sentence[2] = ['=>', aux2, aux1]
-		return	
 
-	if not literal(sentence[1]):
-		equivalence(sentence[1])
-	if not literal(sentence[2]):
-		equivalence(sentence[2])
-
+	for cond in sentence[1:]:
+		if not literal(cond):
+			equivalence(cond)
 
 def implication(sentence):
+	print('HEEEEEEEE',sentence)
 	if(sentence[0] == '=>'):
 		aux=['not', sentence[1]]
 		sentence[0] = 'or'
-		sentence[1] = aux
-		return	
+		sentence[1] = aux	
 
-	if not literal(sentence[1]):
-		implication(sentence[1])
-	if not literal(sentence[2]):
-		implication(sentence[2])
-
+	for cond in sentence[1:]:
+		if not literal(cond):
+			implication(cond)
 
 def negation(sentence):
 	print('negation',sentence)
@@ -123,39 +121,40 @@ def negation(sentence):
 				print('i am here', sentence[1][1])
 				sentence.remove('not')
 				sentence[0] = sentence[0][1]
-				if not literal(sentence):
-					negation(sentence)
 
 			elif aux[0] == 'or':		
 				sentence0 = 'and'
-				sentence1 = ['not', [aux[1]]]
-				sentence2 = ['not', [aux[2]]]
+				if neg_atom(aux[1]):
+					sentence1 = aux[1][1]
+				else:
+					sentence1 = ['not', [aux[1]]]
+				if neg_atom(aux[2]):
+					sentence2 = aux[2][1]
+				else:
+					sentence2 = ['not', [aux[2]]]
 
 				sentence[0]='and'
 				sentence[1]=sentence1
 				sentence.extend(sentence2)
 
-				if not literal(sentence[1]):
-					negation(sentence[1])
-				if not literal(sentence[2]):
-					negation(sentence[2])
-
 			elif aux[0]=='and':
-				sentence1 = ['not', [aux[1]]]
-				sentence2 = ['not', [aux[2]]]
+				if neg_atom(aux[1]):
+					sentence1 = aux[1][1]
+				else:
+					sentence1 = ['not', [aux[1]]]
+				if neg_atom(aux[2]):
+					sentence2 = aux[2][1]
+				else:
+					sentence2 = ['not', [aux[2]]]
 
 				sentence[0]='or'
 				sentence[1]=sentence1
 				sentence.extend(sentence2)
-
-				if not literal(sentence[1]):
-					negation(sentence[1])
-				if not literal(sentence[2]):
-					negation(sentence[2])
-
 	
-	if not literal(sentence[1]):
-		negation(sentence[1])
+	for cond in sentence[1:]:
+		if not literal(cond):
+			negation(cond)
+		
 
 
 def disjunction(sentence):
@@ -168,25 +167,23 @@ def disjunction(sentence):
 			new2 = ['or', sentence[1], sentence[2][2]]
 
 			if sentence[2][0] == 'and':
-				cond = 'and'
+				sentence[0] = 'and'
 			elif sentence[2][0] == 'or':
-				cond = 'or'
+				sentence[0] = 'or'
 
-			sentence[0] = cond
 			sentence[1] = new1
 			sentence[2] = new2
 
 
-		elif (literal(sentence2)):
+		elif (literal(sentence[2])):
 			new1 = ['or', sentence[2], sentence[1][1]]
 			new2 = ['or', sentence[2], sentence[1][2]]
 
 			if sentence[1][0]=='and':
-				cond = 'and'
+				sentence[0] = 'and'
 			elif sentence[1][0]=='or':
-				cond = 'or'
+				sentence[0] = 'or'
 
-			sentence[0] = cond
 			sentence[1] = new1
 			sentence[2] = new2
 
@@ -217,11 +214,11 @@ def disjunction(sentence):
 				sentence[1] = new1
 				sentence[2] = new2
 
+	
+	for cond in sentence[1:]:	
+		if not literal(cond):
+			disjunction(cond)
 
-		if not literal(sentence[1]):
-			implication(sentence[1])
-		if not literal(sentence[2]):
-			implication(sentence[2])
 
   
 def finishing(sentence1, sentence2, myConditions):

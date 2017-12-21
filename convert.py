@@ -19,10 +19,11 @@ def recursive(s):
 	negation(s)
 
 	print('4', s)
-	if not literal(s):
-		disjunction(s)
+	disjunction(s)
 	
 	print('5', s)
+
+
 
 		
 
@@ -125,11 +126,11 @@ def negation(sentence):
 
 			elif aux[0] == 'or':		
 				sentence0 = 'and'
-				if neg_atom(aux[1]):
+				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
 					sentence1 = ['not', [aux[1]]]
-				if neg_atom(aux[2]):
+				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
 					sentence2 = ['not', [aux[2]]]
@@ -139,11 +140,11 @@ def negation(sentence):
 				sentence.extend(sentence2)
 
 			elif aux[0]=='and':
-				if neg_atom(aux[1]):
+				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
 					sentence1 = ['not', [aux[1]]]
-				if neg_atom(aux[2]):
+				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
 					sentence2 = ['not', [aux[2]]]

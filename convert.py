@@ -7,7 +7,7 @@ import copy
 
 isConjunction = False
 
-def recursive(s):
+def recursive(s, myConditions):
 
 	print('1', s)
 	equivalence(s)
@@ -24,35 +24,44 @@ def recursive(s):
 	print('5', s)
 
 
+	a = 0
+	o = 0
+	for cond in sentence:
+		if cond=='and':
+			a = a + 1
 
-		
+		elif cond=='or':
+			o = o + 1
 
-	# print('almost there',sentence)
-	# myConditions=list()
-	# not_finished=True
-	# while not_finished:
-	# 	not_finished=False
-	# 	for i in range(0, len(sentence)):
-	# 		if len(sentence[i])>1:
-	# 			line=sentence[i]
-	# 			j=0
-	# 		else:
-	# 			line=sentence
-	# 			j=i
-	# 		if literal(line):
-	# 			print('literal_finishing')
-	# 			myConditions.extend(line[j])
-	# 		elif line[j] == 'or':
-	# 			print('or_finishing')
-	# 			myConditions.extend(line[j+1])
-	# 			myConditions.extend(line[j+2])
-	# 			not_finished=True
-	# 		elif line[j] == 'and':
-	# 			print('and_finishing')
-	# 			finishing(line[j+1],line[j+2], myConditions)
-	# 			not_finished=True
+		elif o == 1:
+			or1 = cond
+			o = o + 1 
 
-	# 	sentence=list(myConditions)
+		elif o == 2:
+			or2 = cond
+			myConditions.extend(or1)
+			myConditions.extend(or2)
+			o = 0
+
+		elif a == 1:
+			a1 = cond
+			a = a + 1 
+
+		elif a == 2:
+			a2 = cond
+			a=list(myConditions)
+			b=list(myConditions)
+			a.extend(a1)
+			b.extend(a2)
+			myConditions.clear()
+			myConditions.extend(a + b)
+			a = 0
+
+		else:
+			myConditions.extend(sentence)
+
+
+
 			
 
 
@@ -137,7 +146,7 @@ def negation(sentence):
 
 				sentence[0]='and'
 				sentence[1]=sentence1
-				sentence.extend(sentence2)
+				sentence.append(sentence2)
 
 			elif aux[0]=='and':
 				if (aux[1][0]=='not'):
@@ -151,7 +160,7 @@ def negation(sentence):
 
 				sentence[0]='or'
 				sentence[1]=sentence1
-				sentence.extend(sentence2)
+				sentence.append(sentence2)
 	
 	for cond in sentence[1:]:
 		if len(cond)>1:
@@ -223,27 +232,7 @@ def disjunction(sentence):
 
 
   
-def finishing(sentence1, sentence2, myConditions):
-	a=list(myConditions)
-	b=list(myConditions)
-	a.extend(sentence1)
-	b.extend(sentence2)
 
-	print('myConditions before clear', myConditions)
-	myConditions.clear()
-	print('myConditions afer clear', myConditions)
-	if isinstance(a[0], list) and isinstance(b[0], list):
-		myConditions.extend(a + b)
-		print('myConditions.extend(a + b)', myConditions)
-	elif isinstance(a[0], list):
-		myConditions.extend(a + [b])
-		print('myConditions.extend(a + [b])', myConditions)
-	elif isinstance(b[0], list):
-		myConditions.extend([a] + b)
-		print('myConditions.extend([a] + b)', myConditions)
-	else:
-		myConditions.extend([a] + [b])
-		print('myConditions.extend([a] + [b])', myConditions)
 
 
 
@@ -252,14 +241,14 @@ def finishing(sentence1, sentence2, myConditions):
 
 
 nlines = 0
-
+myConditions=list()
 for line in sys.stdin:
 	l = list(line)
 	s = ['[' if x == '(' else ']' if x == ')' else x for x in l]
 	new_line = "".join(s)
 
 	sentence= list(eval(new_line))
-	recursive(sentence)
+	recursive(sentence, myConditions)
 
 
 	nlines = nlines + 1
@@ -271,8 +260,8 @@ for line in sys.stdin:
 # 	myFinalConditions = myFinalConditions[0]
 
 # print(myFinalConditions, '\n Solution:')
-"""print(nlines > 1)
-for condition in sentence:
+print(nlines > 1)
+for condition in myConditions:
 	if nlines > 1:
 		print(condition)
 	else:
@@ -281,4 +270,4 @@ for condition in sentence:
 				print(condition)
 			else:
 				for e in condition:
-					print(e)"""
+					print(e)

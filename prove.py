@@ -20,14 +20,30 @@ def readfile():
 def solve(myConditions, r, visited):
 	if all(visited):
 		return False
+
 	for i in range(len(myConditions)):
-		newR, resolved = resolution(myConditions[i], r)
-		visited[i] = True
-		if not len(newR):
+		print('1', myConditions[i], '2', r)
+		newR = resolution(myConditions[i], r)
+		print(newR, resolved)
+		try:
+			visited[i] = True
+		except Exception as e:
+			return False
+
+		if newR in myConditions:
+			print('Exists already')
+			continue
+		elif resolved and not len(newR):
 			return True
-		else:
+		elif resolved:
+			print('Append')
 			myConditions.append(r)
-			return solve(myConditions, newR, visited)
+			if solve(myConditions, newR, visited):
+				return True
+		else:
+			continue
+
+	print('Back')
 	return False
 
 def hasNegation(sentence,sentence1):
@@ -59,42 +75,45 @@ def nega(sentence):
 
 #def find_negation(sentence1,sentence2)
 
-def resolution(sentence1,sentence2):
-	a = set(sentence1)					#converte para sets
-	b = set(sentence2)					#converte para sets
-	c = set()
-	#print('a', a, 'b', b)
+def resolution(sentence1, sentence2):
+	if isinstance(sentence1, list):
+		a = set(sentence1)					#converte para sets
+	else:
+		a = set([sentence1])
+	if isinstance(sentence2, list):
+		b = set(sentence2)					#converte para sets
+	else:
+		b = set([sentence2])
+
+	c = a|b
 	resolved = False
 	for e in a:							#Se encontrar a sentence1 na sentence2 vai remover os dois e retorna a lista
 		if len(e)>1:
 			if e[1] in b:
-				c = a|b
-				print('c', c)
 				c.remove(e[1])
 				c.remove(e)
 				resolved = True
 		else:
 			if ('not', e) in b:					#Se encontrar a negação e o normal em ambas as listas então remove e retorna a lista
-				c = a|b
-				print('c', c)
 				c.remove(('not', e))
 				c.remove(e)
 				resolved = True
+
 	return list(c), resolved
 
 
 #myConditions=eval("[('not','A'),'B'],[('not','B'),'A'],'A','B'")
 def main():
 	myConditions = readfile()
-	print(myConditions)
+	print('KB:', myConditions)
 	alpha = myConditions[-1]
-	print(alpha)
+	print('negated alpha:', alpha)
 	visited = [False]*(len(myConditions))
 	visited[-1] = True
 	if solve(list(myConditions[:-1]), alpha, visited):
-		print("Proved")
+		print("True")
 	else :
-		print("Não consegui")
+		print("False")
 
 # def simplifi_1(myConditions)
 	# #remove	a	clause	C	if	it	contains	a	literal	that	is	not

@@ -10,50 +10,24 @@ isConjunction = False
 def recursive(s):
 
 	print('1', s)
-	
-	equivalence(s)
+	if not literal(s):
+		equivalence(s)
 
 	print('2', s)
-
-	implication(s)
+	if not literal(s):
+		implication(s)
 
 	print('3', s)
+	if not literal(s):
+		negation(s)
 
-	# neg=True
-	# while neg:
-	# 	neg=False
-	# 	for i in range(0, len(sentence)):
-	# 		if len(sentence[i][0])>1:
-	# 			line=sentence[i]
-	# 			j=0
-	# 		else:
-	# 			line=sentence
-	# 			j=i
-	# 		if line[j] == 'not' :
-	# 			print('negation')
-	# 			if neg_atom(line):
-	# 				pass
-	# 			else:
-	# 				sentence[i]=negation(line[j],line[j+1])
-	# 				neg=True
-			
-
-
-	# for i in range(0, len(sentence)):
-	# 	if len(sentence[i][0])>1:
-	# 		line=sentence[i]
-	# 		j=0
-	# 	else:
-	# 		line=sentence
-	# 		j=i
-	# 	if line[j] == 'or' :
-	# 		print('or_disj')
-	# 		sentence[i]=disjunction(line[j],line[j+1],line[j+2])
-	# 		disj=True
-	# 		print('hhhhh',sentence[i])
+	print('4', s)
+	if not literal(s):
+		disjunction(s)
 	
-	# 	sentence[i]=line
+	print('5', s)
 
+		
 
 	# print('almost there',sentence)
 	# myConditions=list()
@@ -85,11 +59,14 @@ def recursive(s):
 
 
 def atom(sentence):
+	print('a',sentence)
 	a = sentence[0]
-	if a =='<=>' or a == '=>' or a == 'or' or a == 'and' or a== 'not':
+	print(a)
+	if (a =='<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
 		return False
 	else:
 		return True
+
 
 
 def neg_atom(sentence):
@@ -101,120 +78,151 @@ def neg_atom(sentence):
 
 def literal(sentence):
 	if (atom(sentence) or neg_atom(sentence)):
+		print('is LITERAL', sentence)
 		return True
 	else:
 		return False
 
 
 def equivalence(sentence):
-	if(sentence[0]=='<=>'):
-		aux1=sentence[1]
-		aux2=sentence[2]
+	if(sentence[0] == '<=>'):
+		aux1 = sentence[1]
+		aux2 = sentence[2]
 		sentence[0] = 'and'
-		sentence[1] = ('=>', aux1,aux2)
-		sentence[2] = ('=>', aux2,aux1)
+		sentence[1] = ['=>', aux1, aux2]
+		sentence[2] = ['=>', aux2, aux1]
 		return	
 
-	for in_cond in sentence:
-		if(len(in_cond)>1):
-			equivalence(in_cond)
+	if not literal(sentence[1]):
+		equivalence(sentence[1])
+	if not literal(sentence[2]):
+		equivalence(sentence[2])
 
 
 def implication(sentence):
-	print('implication')
-	print('aaa', sentence[0])
-	if(sentence[0]=='=>'):
-		aux=('not', sentence[1])
+	if(sentence[0] == '=>'):
+		aux=['not', sentence[1]]
 		sentence[0] = 'or'
-		sentence[1] = ('not', aux)
+		sentence[1] = aux
 		return	
 
-	for in_cond in sentence:
-		if(len(in_cond)>1):
-			implication(in_cond)
-			print('hhh')
+	if not literal(sentence[1]):
+		implication(sentence[1])
+	if not literal(sentence[2]):
+		implication(sentence[2])
 
 
-def negation(cond, sentence):
-	if atom(sentence):
-		return	
+def negation(sentence):
+	print('negation',sentence)
+	if(sentence[0] == 'not'):
+		if not atom(sentence[1]):
+			print('sentencemerda' , sentence[1])
+			aux = sentence[1]
+			print('here', aux[0])
+			if aux[0] == 'not':
+				print('i am here', sentence[1][1])
+				sentence.remove('not')
+				sentence[0] = sentence[0][1]
+				if not literal(sentence):
+					negation(sentence)
 
-	cond = ''
+			elif aux[0] == 'or':		
+				sentence0 = 'and'
+				sentence1 = ['not', [aux[1]]]
+				sentence2 = ['not', [aux[2]]]
 
-	if sentence[0]=='not':
-		sentence = sentence[1]
+				sentence[0]='and'
+				sentence[1]=sentence1
+				sentence.extend(sentence2)
 
-	elif sentence[0] == 'or':		
-		new1 = ('not', sentence[1])
-		new2 = ('not', sentence[2])
-		sentence = ('and',new1, new2)
+				if not literal(sentence[1]):
+					negation(sentence[1])
+				if not literal(sentence[2]):
+					negation(sentence[2])
 
+			elif aux[0]=='and':
+				sentence1 = ['not', [aux[1]]]
+				sentence2 = ['not', [aux[2]]]
 
-	elif sentence[0]=='and':
-		new1 = ('not', sentence[1])
-		new2 = ('not', sentence[2])
-		sentence = ('or', new1, new2)
+				sentence[0]='or'
+				sentence[1]=sentence1
+				sentence.extend(sentence2)
 
-	return (cond, sentence)
+				if not literal(sentence[1]):
+					negation(sentence[1])
+				if not literal(sentence[2]):
+					negation(sentence[2])
 
-
-def disjunction(cond, sentence1, sentence2):
-
-	if (literal(sentence1) and literal(sentence2)):
-		return (sentence1, sentence2)
-
-
-	elif (literal(sentence1)):
-		new1=('or', sentence1, sentence2[1])
-		new2=('or', sentence1, sentence2[2])
-		sentence1=new1
-		sentence2=new2
-		if sentence2[0]=='and':
-			cond='and'
-		elif sentence2[0]=='or':
-			cond='or'
+	
+	if not literal(sentence[1]):
+		negation(sentence[1])
 
 
-	elif (literal(sentence2)):
-		new1=('or', sentence2, sentence1[1])
-		new2=('or', sentence2, sentence1[2])
-		sentence1=new1
-		sentence2=new2
-		if sentence1[0]=='and':
-			cond='and'
+def disjunction(sentence):
+	if(sentence[0] == 'or'):
+		if (literal(sentence[1]) and literal(sentence[2])):
+			return
+
+		elif (literal(sentence[1])):
+			new1 = ['or', sentence[1], sentence[2][1]]
+			new2 = ['or', sentence[1], sentence[2][2]]
+
+			if sentence[2][0] == 'and':
+				cond = 'and'
+			elif sentence[2][0] == 'or':
+				cond = 'or'
+
+			sentence[0] = cond
+			sentence[1] = new1
+			sentence[2] = new2
+
+
+		elif (literal(sentence2)):
+			new1 = ['or', sentence[2], sentence[1][1]]
+			new2 = ['or', sentence[2], sentence[1][2]]
+
+			if sentence[1][0]=='and':
+				cond = 'and'
+			elif sentence[1][0]=='or':
+				cond = 'or'
+
+			sentence[0] = cond
+			sentence[1] = new1
+			sentence[2] = new2
+
+		elif sentence[1][0] =='and':
+			if sentence[2][0] == 'or':
+				new1 = ['or', sentence[1][1], sentence[2]]
+				new2 = ['or', sentence[1][2], sentence[2]]
+				sentence[0] = 'and'
+				sentence[1] = new1
+				sentence[2] = new2
+
+			elif sentence2[0] == 'and':
+				new1=['or', sentence[1][1], sentence[2][1]]
+				new2=['or', sentence[1][2], sentence[2][1]]
+				new3=['or', sentence[1][1], sentence[2][2]]
+				new4=['or', sentence[1][2], sentence[2][2]]
+				sentence1=['and',new1, new2]
+				sentence2=['and', new3, new4]
+				sentence[0] = 'and'
+				sentence[1] = sentence1
+				sentence[2] = sentence2
+
 		elif sentence1[0]=='or':
-			cond='or'
+			if sentence2[0]== 'and':
+				new1 = ['or', sentence[2][1], sentence[1]]
+				new2 = ['or', sentence[2][2], sentence[1]]
+				sentence[0] = 'and'
+				sentence[1] = new1
+				sentence[2] = new2
 
 
-	elif sentence1[0]=='and':
-		if sentence2[0] == 'or':
-			new1=('or', sentence1[1], sentence2)
-			new2=('or', sentence1[2], sentence2)
-			sentence1=new1
-			sentence2=new2
-			cond='and'
+		if not literal(sentence[1]):
+			implication(sentence[1])
+		if not literal(sentence[2]):
+			implication(sentence[2])
 
-		elif sentence2[0] == 'and':
-			new1=('or', sentence1[1], sentence2[1])
-			new2=('or', sentence1[2], sentence2[1])
-			new3=('or', sentence1[1], sentence2[2])
-			new4=('or', sentence1[2], sentence2[2])
-			sentence1=('and',new1, new2)
-			sentence2=('and', new3, new4)
-			cond = 'and'
-
-	elif sentence1[0]=='or':
-		if sentence2[0]== 'and':
-			new1=('or', sentence2[1], sentence1)
-			new2=('or', sentence2[2], sentence1)
-			sentence1=new1
-			sentence2=new2
-			cond='and'
-
-	else:
-		pass
-
-	return(cond, sentence1, sentence2)
   
 def finishing(sentence1, sentence2, myConditions):
 	a=list(myConditions)
@@ -247,7 +255,11 @@ def finishing(sentence1, sentence2, myConditions):
 nlines = 0
 
 for line in sys.stdin:
-	sentence= list(eval(line))
+	l = list(line)
+	s = ['[' if x == '(' else ']' if x == ')' else x for x in l]
+	new_line = "".join(s)
+
+	sentence= list(eval(new_line))
 	recursive(sentence)
 
 

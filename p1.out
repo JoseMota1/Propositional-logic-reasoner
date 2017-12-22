@@ -1,30 +1,20 @@
-original: ['<=>', ['and', 'A', 'B'], ['<=>', 'B', ['or', 'C', 'D']]] end
-equivalence: ['and', ['=>', ['and', 'A', 'B'], ['and', ['=>', 'B', ['or', 'C', 'D']], ['=>', ['or', 'C', 'D'], 'B']]], ['=>', ['and', ['=>', 'B', ['or', 'C', 'D']], ['=>', ['or', 'C', 'D'], 'B']], ['and', 'A', 'B']]] end
-implication: ['and', ['or', ['not', ['and', 'A', 'B']], ['and', ['or', ('not', 'B'), ['or', 'C', 'D']], ['or', ['not', ['or', 'C', 'D']], 'B']]], ['or', ['not', ['and', ['or', ('not', 'B'), ['or', 'C', 'D']], ['or', ['not', ['or', 'C', 'D']], 'B']]], ['and', 'A', 'B']]] end
-negation: ['and', ['or', ['or', ['not', 'A'], ['not', 'B']], ['and', ['or', ('not', 'B'), ['or', 'C', 'D']], ['or', ['and', ['not', 'C'], ['not', 'D']], 'B']]], ['or', ['or', ['and', 'B', ['and', ['not', 'C'], ['not', 'D']]], ['and', ['or', 'C', 'D'], ['not', 'B']]], ['and', 'A', 'B']]] end
-disjunction ['and', ['and', ['or', ['or', ['or', ('not', 'B'), 'C'], ['or', ('not', 'B'), 'D']], ['or', ['not', 'A'], ['not', 'B']]], ['or', ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]], ['or', ['not', 'A'], ['not', 'B']]]], ['and', ['or', ['and', ['or', 'A', 'B'], ['and', ['or', 'A', ['not', 'C']], ['or', 'A', ['not', 'D']]]], ['and', ['or', ['or', 'A', 'C'], ['or', 'A', 'D']], ['or', 'A', ['not', 'B']]]], ['or', ['and', ['or', 'B', 'B'], ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]]], ['and', ['or', ['or', 'B', 'C'], ['or', 'B', 'D']], ['or', 'B', ['not', 'B']]]]]] end
-['and', ['and', ['or', ['or', ['or', ('not', 'B'), 'C'], ['or', ('not', 'B'), 'D']], ['or', ['not', 'A'], ['not', 'B']]], ['or', ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]], ['or', ['not', 'A'], ['not', 'B']]]], ['and', ['or', ['and', ['or', 'A', 'B'], ['and', ['or', 'A', ['not', 'C']], ['or', 'A', ['not', 'D']]]], ['and', ['or', ['or', 'A', 'C'], ['or', 'A', 'D']], ['or', 'A', ['not', 'B']]]], ['or', ['and', ['or', 'B', 'B'], ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]]], ['and', ['or', ['or', 'B', 'C'], ['or', 'B', 'D']], ['or', 'B', ['not', 'B']]]]]]
-original: ['or', 'E', 'F'] end
-equivalence: ['or', 'E', 'F'] end
-implication: ['or', 'E', 'F'] end
-negation: ['or', 'E', 'F'] end
-disjunction ['or', 'E', 'F'] end
-['or', 'E', 'F']
-original: ['=>', 'E', 'C'] end
-equivalence: ['=>', 'E', 'C'] end
-implication: ['or', ('not', 'E'), 'C'] end
-negation: ['or', ('not', 'E'), 'C'] end
-disjunction ['or', ('not', 'E'), 'C'] end
-['or', ('not', 'E'), 'C']
-original: ['=>', ['not', 'D'], ['not', 'F']] end
-equivalence: ['=>', ['not', 'D'], ['not', 'F']] end
-implication: ['or', ['not', ['not', 'D']], ['not', 'F']] end
-negation: ['or', ['D'], ['not', 'F']] end
-disjunction ['or', ['D'], ['not', 'F']] end
-['or', ['D'], ['not', 'F']]
-original: ['not', ['=>', 'A', 'B']] end
-equivalence: ['not', ['=>', 'A', 'B']] end
-implication: ['not', ['or', ('not', 'A'), 'B']] end
-negation: ['and', 'A', ['not', 'B']] end
-disjunction ['and', 'A', ['not', 'B']] end
-['and', 'A', ['not', 'B']]
+[('not', 'C'), 'B', ('not', 'A'), ('not', 'B')]
+[('not', 'D'), 'B', ('not', 'A'), ('not', 'B')]
+[('not', 'B'), 'C', 'D', ('not', 'A')]
+[('not', 'C'), 'C', 'D', 'A']
+[('not', 'D'), 'C', 'D', 'A']
+['B', 'C', 'D', 'A']
+[('not', 'C'), ('not', 'B'), 'A']
+[('not', 'D'), ('not', 'B'), 'A']
+['B', ('not', 'B'), 'A']
+[('not', 'C'), 'C', 'D', 'B']
+[('not', 'D'), 'C', 'D', 'B']
+['B', 'C', 'D']
+[('not', 'C'), ('not', 'B'), 'B']
+[('not', 'D'), ('not', 'B'), 'B']
+['B', ('not', 'B')]
+['E', 'F']
+[('not', 'E'), 'C']
+['D', ('not', 'F')]
+'A'
+('not', 'B')

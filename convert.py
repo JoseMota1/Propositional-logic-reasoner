@@ -66,7 +66,7 @@ def equivalence(sentence):
 
 
 def implication(sentence):
-	print ('IMP', sentence)
+#	print ('IMP', sentence)
 	if(sentence[0] == '=>'):
 		if len(sentence[1]) == 1:
 			aux = ('not', sentence[1])
@@ -215,36 +215,38 @@ def finishing_and(sentence):
 def dprint(sentence):
 	if sentence[0] == 'and':
 		dprint(sentence[1])
+		print(']', end='')
 		print('')
+		print('[', end='')
 		dprint(sentence[2])
 	elif sentence[0] == 'or':
 		dprint(sentence[1])
 		print(', ', end='')
 		dprint(sentence[2])
 	else:
-		print(sentence, end='')
+		if len(sentence) == 1:
+			print("'", end='')
+			print(sentence, end='')
+			print("'", end='')
+		else:
+			print(sentence, end='')
 
 """ ------ MAIN FUNCTION ------ """
 
 nlines = 0
 myConditions=list()
 for line in sys.stdin:
-	print(line)
-	s = line
-	for i in range(0, len(line)):
-		if line[i] == '(' and line[i+1] != 'n':
-			s = s[:i] + '[' + s[i+1:]
-		if line[i] == ')' and line[i-1] != 't':
-			s = s[:i] + ']' + s[i+1:]
+	l = list(line)
+	s = ['[' if x == '(' else ']' if x == ')' else x for x in l]
+	new_line = "".join(s)
 
-	print(s)
-
-	sentence = list(eval(s))
+	sentence= list(eval(new_line))
 	convert(sentence)
 
-	print('TOTAL', sentence)
+#	print('TOTAL', sentence)
+	print('[', end='')
 	dprint(sentence)
-	print()
+	print(']')
 
 
 	nlines = nlines + 1

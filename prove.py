@@ -7,7 +7,7 @@ def readfile():
 	for line in sys.stdin:
 		sentence = eval(line)
 		myConditions.append(sentence)
-	simplifi_2(myConditions)
+	#simplifi_2(myConditions)
 	return myConditions
 
 def solve(myConditions, r, visited):

@@ -14,28 +14,22 @@ def solve(myConditions, r, visited):
 		return False
 
 	for i in range(len(myConditions)):
-		# print('1', myConditions[i], '2', r)
 		newR, resolved = resolution(myConditions[i], r)
-		# print(newR, resolved)
 		try:
 			visited[i] = True
 		except Exception as e:
 			return False
 
 		if newR in myConditions:
-		#	print('Exists already')
 			continue
 		elif resolved and not len(newR):
 			return True
 		elif resolved:
-			#print('Append')
 			myConditions.append(r)
 			if solve(myConditions, newR, visited):
 				return True
 		else:
 			continue
-
-	#print('Back')
 	return False
 
 def hasnegation(sentence,sentence1):
@@ -84,14 +78,12 @@ def resolution(sentence1, sentence2):
 
 	c = a|b
 	resolved = False
-	print('a|b', c)
 	for e in a:						#Se encontrar a sentence1 na sentence2 vai remover os dois e retorna a lista
 		if len(e)>1:
 			if e[1] in b:
 				try:
 					c.remove(e[1])
 					c.remove(e)
-					print('e[1] in b', c)
 					resolved = True
 				except Exception as e:
 					pass
@@ -100,7 +92,6 @@ def resolution(sentence1, sentence2):
 				try:
 					c.remove(('not', e))
 					c.remove(e)
-					print("('not', e) in b", c)
 					resolved = True
 				except Exception as e:
 					pass
@@ -114,12 +105,8 @@ def resolution(sentence1, sentence2):
 
 def main():
 	myConditions = readfile()
-	print('KB:', myConditions)
 	myConditions2 = simplifi_2(myConditions)
-	print('KB:', myConditions2)
 	alpha = myConditions2[-1]
-	#print('negated alpha:', alpha)
-
 	for i in range(len(myConditions2)):
 		myConditions3 = myConditions2[:i] + myConditions2[:i+1]
 		visited = [False]*(len(myConditions2))
@@ -140,23 +127,6 @@ def simplifi_2(myConditions):
 			final.append(sentence)
 
 	return final
-
-
-def simplifi_3(myConditions):
-	#subsets
-	final=[]
-	i=0
-	for sentence in myConditions:
-		aux_1=set(myConditions[i])
-		aux_2=set(sentence)
-		if aux_1.issubset(aux_2):
-			final.append(myConditions[i])
-		if aux_2.issubset(aux_1):
-			final.append(sentence)
-		else:
-			final.append(sentence)
-	return final
-
 
 if __name__ == "__main__":
 	main()

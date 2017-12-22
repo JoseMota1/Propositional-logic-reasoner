@@ -7,86 +7,15 @@ import copy
 
 isConjunction = False
 
-def convert(sentence, myConditions):
+def convert(sentence):
 
 	equivalence(sentence)
-
 	implication(sentence)
-
 	negation(sentence)
-
 	disjunction(sentence)
-	
-	print('5', sentence)
+	finishing(sentence)
 
-	print('what')
-
-	test = True 
-	aux_not = False
-	while test:
-		aux_a = 0
-		aux_o = 0
-		test = False
-		for cond in sentence:
-			if len(cond)>1:
-				if cond == 'and':
-					aux_a = aux_a + 1
-					aux_not = False
-					test = True
-
-				elif cond == 'or':
-					aux_o = aux_o + 1
-					aux_not = False
-					test = True
-
-				elif cond == 'not':
-					aux_not = cond
-
-				elif aux_o > 0:
-					if cond != 'and' or cond != 'or' or cond !='not':
-						if aux_not != False:
-							myConditions.extend([aux_not+cond])
-						else:
-							myConditions.extend([cond])	 
-						aux_not = False
-						aux_o = aux_o-1
-
-				elif aux_a == 1:
-					if cond != 'and' or cond != 'or' or cond !='not':
-						a=list(myConditions)
-						if aux_not != False:
-							a.extend([aux_not+cond])
-						else:
-							a.extend([cond])
-						aux_not = False
-						aux_a = aux_a + 1 
-
-				elif aux_a == 2:
-					if cond != 'and' or cond != 'or' or cond !='not':
-						b=list(myConditions)
-						if aux_not != False:
-							b.extend([aux_not+cond])
-						else:
-							b.extend([cond])
-						myConditions.clear()
-						myConditions.extend(a + b)
-						aux_not = False
-						aux_a = 0
-
-				else:
-					myConditions.extend(cond)
-
-				print('myC dntro ciclo', myConditions)
-
-		sentence = list()
-		sentence = copy.copy(myConditions)
-		print('fim do for',sentence, 'test', test)
-		myConditions = list()
-
-	myConditions = copy.copy(sentence)
-	print('im true', sentence)
-			
-
+		
 
 def atom(sentence):
 	if len(sentence)>1:
@@ -96,7 +25,6 @@ def atom(sentence):
 		if (a =='<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
 			return False
 		else:
-			print('IS ATOM',sentence)
 			return True
 	else:
 		return False
@@ -107,7 +35,6 @@ def neg_atom(sentence):
 	if len(sentence) > 2:
 		return False
 	elif len(sentence) == 2 and sentence[0] == 'not' and atom(sentence[1]):
-		print('NEGATOM',sentence)
 		return True
 	else:
 		return False
@@ -144,13 +71,9 @@ def implication(sentence):
 
 def negation(sentence):
 	if(sentence[0] == 'not'):
-		print('entered', sentence)
 		if not neg_atom(sentence):
-			print('sentencemerda' , sentence[1])
 			aux = sentence[1]
-			print('here', aux[0])
 			if aux[0] == 'not':
-				print('i am here', sentence[1][1])
 				sentence.remove('not')
 				sentence[0] = sentence[0][1]
 
@@ -252,8 +175,24 @@ def disjunction(sentence):
 			disjunction(cond)
 
 
-  
+def finishing(sentence):
+	if sentence[0] == 'or':	
+		aux0 = sentence[1] , sentence[2]
+		aux1 = sentence[1]
+		sentence.remove('or')
+		sentence.remove(aux1)
+		sentence[0]=aux0
 
+	elif sentence[0] == 'and':
+		aux0 = sentence[1]
+		aux1 = sentence[2]
+		sentence.remove('and')
+		sentence[0]=aux0
+		sentence[1]=aux1
+
+	for cond in sentence:	
+		if len(cond)>1:
+			finishing(cond)
 
 """ ------ MAIN FUNCTION ------ """
 
@@ -265,14 +204,14 @@ for line in sys.stdin:
 	new_line = "".join(s)
 
 	sentence= list(eval(new_line))
-	convert(sentence, myConditions)
+	convert(sentence)
 
 	nlines = nlines + 1
 
 
 
-print(nlines > 1)
-for condition in myConditions:
+#	print(nlines > 1)
+for condition in sentence:
 	if nlines > 1:
 		print(condition)
 	else:

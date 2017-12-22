@@ -209,7 +209,7 @@ for line in sys.stdin:
 	for condition in sentence:
 		if literal(sentence):
 			condition = sentence
-		if nlines > 1 and not literal(sentence):
+		if (nlines > 1 and (not literal(sentence))):
 			print(condition)
 		else:
 			if condition:

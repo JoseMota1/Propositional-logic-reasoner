@@ -11,10 +11,14 @@ def convert(sentence):
 
 	equivalence(sentence)
 	implication(sentence)
+
 	negation(sentence)
 	disjunction(sentence)
+	print('disj', sentence, 'end')
 	#finishing_or(sentence)
-	finishing_and(sentence)
+	#print('or_finish', sentence, 'end')
+	#finishing_and(sentence)
+	#print('and_finish', sentence, 'end')
 
 
 
@@ -180,14 +184,20 @@ def finishing_or(sentence):
 	if sentence[0] == 'or':
 		#print('1111', sentence[1])
 		#print('1222', sentence[2])
-		aux0 = sentence[1] , sentence[2]
-		aux1 = sentence[1]
+		aux0 = sentence[1]
+		aux1 = sentence[2]
+
 		sentence.remove('or')
+		sentence.remove(aux0)
 		sentence.remove(aux1)
-		sentence[0]=aux0
+
+		sentence.append(aux0)
 
 
-	for cond in sentence:
+		sentence.append(aux1)
+
+
+	for cond in sentence[1:]:
 		if len(cond)>1:
 			finishing_or(cond)
 
@@ -195,14 +205,27 @@ def finishing_and(sentence):
 	if sentence[0] == 'and':
 		#print('2111', sentence[1])
 		#print('2222', sentence[2])
-		sentence[1]=sentence[1]
-		sentence[2]=sentence[2]
+		aux0=sentence[1]
+		aux1=sentence[2]
 		sentence.remove('and')
+		sentence.remove(aux0)
+		sentence.remove(aux1)
+		sentence.append(aux0)
+		sentence.append(aux1)
 
 
-	for cond in sentence:
+	for cond in sentence[1:]:
 		if len(cond)>1:
 			finishing_and(cond)
+
+#def fix_sentences(sentence):
+
+
+
+
+
+
+
 
 """ ------ MAIN FUNCTION ------ """
 
@@ -219,7 +242,7 @@ for line in sys.stdin:
 	print(sentence)
 	nlines = nlines + 1
 
-	for condition in sentence:
+"""	for condition in sentence:
 		if literal(sentence):
 			condition = sentence
 		if (nlines > 1 and (not literal(sentence))):
@@ -272,5 +295,5 @@ for line in sys.stdin:
 
 								s = s[:(i+fw)] + '(' + s[(i+fw):(i+pi+fw)] + ')' + s[(i+pi+fw):]
 								fw += 2
-						print(s)
+						print(s)"""
 

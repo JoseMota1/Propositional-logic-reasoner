@@ -1,5 +1,10 @@
-[[('not', 'A'), ('not', 'B'), ('not', 'B'), 'C', 'D'], [('not', 'A'), ('not', 'B'), 'B', ('not', 'C')], [('not', 'A'), ('not', 'B'), 'B', ('not', 'D')], ['B'], [('not', 'C')], [('not', 'D')], 'C', 'D', ['B'], [('not', 'C')], [('not', 'D')], ('not', 'B'), 'A', ['B'], [('not', 'C')], [('not', 'D')], 'C', 'D', ['B'], [('not', 'C')], [('not', 'D')], ('not', 'B'), 'B']
-['E', 'F']
-[('not', 'E'), 'C']
-['D', ('not', 'F')]
-[['A'], [('not', 'B')]]
+disj ['and', ['and', ['or', ['or', ['or', ['not', 'B'], 'C'], ['or', ['not', 'B'], 'D']], ['or', ['not', 'A'], ['not', 'B']]], ['or', ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]], ['or', ['not', 'A'], ['not', 'B']]]], ['and', ['or', ['and', ['or', 'A', 'B'], ['and', ['or', 'A', ['not', 'C']], ['or', 'A', ['not', 'D']]]], ['and', ['or', ['or', 'A', 'C'], ['or', 'A', 'D']], ['or', 'A', ['not', 'B']]]], ['or', ['and', ['or', 'B', 'B'], ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]]], ['and', ['or', ['or', 'B', 'C'], ['or', 'B', 'D']], ['or', 'B', ['not', 'B']]]]]] end
+['and', ['and', ['or', ['or', ['or', ['not', 'B'], 'C'], ['or', ['not', 'B'], 'D']], ['or', ['not', 'A'], ['not', 'B']]], ['or', ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]], ['or', ['not', 'A'], ['not', 'B']]]], ['and', ['or', ['and', ['or', 'A', 'B'], ['and', ['or', 'A', ['not', 'C']], ['or', 'A', ['not', 'D']]]], ['and', ['or', ['or', 'A', 'C'], ['or', 'A', 'D']], ['or', 'A', ['not', 'B']]]], ['or', ['and', ['or', 'B', 'B'], ['and', ['or', 'B', ['not', 'C']], ['or', 'B', ['not', 'D']]]], ['and', ['or', ['or', 'B', 'C'], ['or', 'B', 'D']], ['or', 'B', ['not', 'B']]]]]]
+disj ['or', 'E', 'F'] end
+['or', 'E', 'F']
+disj ['or', ['not', 'E'], 'C'] end
+['or', ['not', 'E'], 'C']
+disj ['or', ['D'], ['not', 'F']] end
+['or', ['D'], ['not', 'F']]
+disj ['and', 'A', ['not', 'B']] end
+['and', 'A', ['not', 'B']]

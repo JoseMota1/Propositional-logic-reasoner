@@ -7,46 +7,39 @@ def readfile():
 	for line in sys.stdin:
 		sentence = eval(line)
 		myConditions.append(sentence)
+	simplifi_2(myConditions)
 	return myConditions
-
-# myConditions=eval("'B', ('not','B')")
-
-# def permutati(myConditions):
-	# permutatio=[]
-	# for L in range(0, len(myConditions)):
-		# for subset in itertools.Permunations(myConditions, L):
-			# print(subset)
 
 def solve(myConditions, r, visited):
 	if all(visited):
 		return False
 
 	for i in range(len(myConditions)):
-		print('1', myConditions[i], '2', r)
-		newR = resolution(myConditions[i], r)
-		print(newR, resolved)
+		#print('1', myConditions[i], '2', r)
+		newR,resolved = resolution(myConditions[i], r)
+		#print(newR, resolved)
 		try:
 			visited[i] = True
 		except Exception as e:
 			return False
 
 		if newR in myConditions:
-			print('Exists already')
+		#	print('Exists already')
 			continue
 		elif resolved and not len(newR):
 			return True
 		elif resolved:
-			print('Append')
+			#print('Append')
 			myConditions.append(r)
 			if solve(myConditions, newR, visited):
 				return True
 		else:
 			continue
 
-	print('Back')
+	#print('Back')
 	return False
 
-def hasNegation(sentence,sentence1):
+def hasnegation(sentence,sentence1):
 	a=set(sentence)
 	b=set(sentence1)
 	aux_a=nega(sentence)
@@ -71,9 +64,6 @@ def nega(sentence):
 			c.add(('not', aux))
 	return list(c)
 
-
-
-#def find_negation(sentence1,sentence2)
 
 def resolution(sentence1, sentence2):
 	if isinstance(sentence1, list):
@@ -102,12 +92,11 @@ def resolution(sentence1, sentence2):
 	return list(c), resolved
 
 
-#myConditions=eval("[('not','A'),'B'],[('not','B'),'A'],'A','B'")
 def main():
 	myConditions = readfile()
 	print('KB:', myConditions)
 	alpha = myConditions[-1]
-	print('negated alpha:', alpha)
+	#print('negated alpha:', alpha)
 	visited = [False]*(len(myConditions))
 	visited[-1] = True
 	if solve(list(myConditions[:-1]), alpha, visited):
@@ -115,49 +104,47 @@ def main():
 	else :
 		print("False")
 
-# def simplifi_1(myConditions)
-	# #remove	a	clause	C	if	it	contains	a	literal	that	is	not
-	# #complementary	with	any	other	in	the	remaining	clauses
-	# for e in myConditions
-		# if
 
-# def simplifi_2(myConditions)
-	# final=[]
-# #tautologies	can	be	removed
-# #clauses	that	contain	both	a	literal	and	its	nega.on
-	# for a in myConditions
-	  # aux=set(a)
-		# for cada in aux
-			# if len(cada)==1
-				# if ('not', cada) in aux:
-					# aux.remove(('not', e))
-					# aux.remove(e)
-					# list(aux)
-					# final.append(aux)
-			# if len(cada)>1
-				# if cada in aux:
-					# aux.remove(('not', cada))
-					# aux.remove(cada)
-					# list(aux)
-					# final.append(aux)
-
-# def simplifi_3(myConditions)
-# #remove	clauses	that	are	implied	by	other	clauses
-# #i.e.,	if	a	clause	is	subset	of	another,	then	the	largest	clause	can	be	eliminated
-
-# def simplifi_4(myConditions)
-# #if	a	literal	occurs	more	than	once	in	a	clause,	then	the
-# #duplica.on	can	be	eliminated	(factoring)
-	# for a in myConditions
-		# aux=set(a)
-		# aux_list=list(aux)
-	# return aux_list
+def simplifi_2(myConditions):
+	#tautologies	can	be	removed
+	#clauses	that	contain	both	a	literal	and	its	nega.on
+	final=[]
+	for sentence in myConditions:
+		tautology = True
+		for e in sentence:
+			if len(e)>1:
+				if e[1] in sentence:
+					continue
+				else:
+					tautology = False
+			else:
+				if ('not', e) in sentence:
+					continue
+				else:
+					tautology = False	
+					
+		if not tautology:
+			final.append(sentence)
+			
+	return final
 
 
-#print(hasNegation(myConditions[0],myConditions[2]))
-#print(resultado(myConditions[0],myConditions[1]))
-#print(hasNegation(myConditions[0],myConditions[1]))
-#print(nega(myConditions[1]))
+def simplifi_3(myConditions):
+	#tautologies	can	be	removed
+	#clauses	that	contain	both	a	literal	and	its	nega.on
+	final=[]
+	i=0
+	for sentence in myConditions:
+		aux_1=set(myConditions[i])
+		aux_2=set(sentence)
+		if aux_1.issubset(aux_2):
+			final.append(myConditions[i])
+		if aux_2.issubset(aux_1):
+			final.append(sentence)
+		else:
+			final.append(sentence)
+	return final
+
 
 if __name__ == "__main__":
 	main()

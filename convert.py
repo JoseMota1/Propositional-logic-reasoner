@@ -78,15 +78,13 @@ def convert(sentence, myConditions):
 
 				print('myC dntro ciclo', myConditions)
 
-		aux = list()
-		aux = copy.copy(sentence)
 		sentence = list()
 		sentence = copy.copy(myConditions)
 		print('fim do for',sentence, 'test', test)
 		myConditions = list()
 
-	myConditions = copy.copy(aux)
-	print('im true', aux)
+	myConditions = copy.copy(sentence)
+	print('im true', sentence)
 			
 
 

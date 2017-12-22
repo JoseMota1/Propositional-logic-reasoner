@@ -205,8 +205,11 @@ for line in sys.stdin:
 
 	nlines = nlines + 1
 
+
 	for condition in sentence:
-		if nlines > 1:
+		if literal(sentence):
+			condition = sentence
+		if nlines > 1 and not literal(sentence):
 			print(condition)
 		else:
 			if condition:

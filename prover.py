@@ -63,6 +63,14 @@ def nega(sentence):
 			c.add(('not', aux))
 	return list(c)
 
+def tautology(sentence):
+	for e in sentence:
+		if len(e)>1 and	e[1] in sentence:
+			return True
+		elif ('not', e) in sentence:
+			return True
+
+	return False
 
 def resolution(sentence1, sentence2):
 	if isinstance(sentence1, list):
@@ -76,12 +84,14 @@ def resolution(sentence1, sentence2):
 
 	c = a|b
 	resolved = False
+	print('a|b', c)
 	for e in a:						#Se encontrar a sentence1 na sentence2 vai remover os dois e retorna a lista
 		if len(e)>1:
 			if e[1] in b:
 				try:
 					c.remove(e[1])
 					c.remove(e)
+					print('e[1] in b', c)
 					resolved = True
 				except Exception as e:
 					pass
@@ -90,26 +100,35 @@ def resolution(sentence1, sentence2):
 				try:
 					c.remove(('not', e))
 					c.remove(e)
+					print("('not', e) in b", c)
 					resolved = True
 				except Exception as e:
 					pass
+
+		if tautology(list(c)):
+			resolved = False
+			break
 
 	return list(c), resolved
 
 
 def main():
 	myConditions = readfile()
-	# print('KB:', myConditions)
+	print('KB:', myConditions)
 	myConditions2 = simplifi_2(myConditions)
-	# print('KB:', myConditions2)
+	print('KB:', myConditions2)
 	alpha = myConditions2[-1]
 	#print('negated alpha:', alpha)
-	visited = [False]*(len(myConditions2))
-	visited[-1] = True
-	if solve(list(myConditions2[:-1]), alpha, visited):
-		print("True")
-	else :
-		print("False")
+
+	for i in range(len(myConditions2)):
+		myConditions3 = myConditions2[:i] + myConditions2[:i+1]
+		visited = [False]*(len(myConditions2))
+		visited[i] = True
+		if solve(list(myConditions3), myConditions2[i], visited):
+			print("True")
+			sys.exit(0)
+
+	print("False")
 
 
 def simplifi_2(myConditions):
@@ -117,25 +136,14 @@ def simplifi_2(myConditions):
 	#clauses	that	contain	both	a	literal	and	its	nega.on
 	final = []
 	for sentence in myConditions:
-		tautology = False
-		for e in sentence:
-			if len(e)>1:
-				if e[1] in sentence:
-					tautology = True
-
-			else:
-				if ('not', e) in sentence:
-					tautology = True
-
-		if not tautology:
+		if not tautology(sentence):
 			final.append(sentence)
 
 	return final
 
 
 def simplifi_3(myConditions):
-	#tautologies	can	be	removed
-	#clauses	that	contain	both	a	literal	and	its	nega.on
+	#subsets
 	final=[]
 	i=0
 	for sentence in myConditions:

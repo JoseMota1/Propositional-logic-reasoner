@@ -200,16 +200,6 @@ for line in sys.stdin:
 	sentence= list(eval(new_line))
 	convert(sentence)
 
-	"""if len(sentence) == 1:
-		print("'", end='')
-		print(sentence[0], end='')
-		print("'")
-		continue
-
-	if sentence[0] == 'not':
-		print(tuple(sentence))
-		continue"""
-
 	print('[', end='')
 	dprint(sentence)
 	print(']')

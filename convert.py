@@ -9,19 +9,18 @@ isConjunction = False
 
 def convert(sentence):
 
-	print('original:', sentence, 'end')
+#	print('original:', sentence, 'end')
 	equivalence(sentence)
-	print('equivalence:', sentence, 'end')
+#	print('equivalence:', sentence, 'end')
 	implication(sentence)
-	print('implication:', sentence, 'end')
+#	print('implication:', sentence, 'end')
 	negation(sentence)
-	print('negation:', sentence, 'end')
+#	print('negation:', sentence, 'end')
 	disjunction(sentence)
-	print('disjunction', sentence, 'end')
-	#finishing_or(sentence)
-	#print('or_finish', sentence, 'end')
-	#finishing_and(sentence)
-	#print('and_finish', sentence, 'end')
+	disjunction(sentence)
+	disjunction(sentence)
+	#print('disjunction', sentence, 'end')
+	switch_associative(sentence)
 
 
 def atom(sentence):
@@ -29,7 +28,7 @@ def atom(sentence):
 		return False
 	elif len(sentence)==1:
 		a = sentence[0]
-		if (a =='<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
+		if (a == '<=>') or (a == '=>') or (a == 'or') or (a == 'and') or (a == 'not'):
 			return False
 		else:
 			return True
@@ -67,6 +66,7 @@ def equivalence(sentence):
 
 
 def implication(sentence):
+	print ('IMP', sentence)
 	if(sentence[0] == '=>'):
 		if len(sentence[1]) == 1:
 			aux = ('not', sentence[1])
@@ -93,11 +93,17 @@ def negation(sentence):
 				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
-					sentence1 = ['not', aux[1]]
+					if len(aux[1]) == 1:
+						sentence1 = ('not', aux[1])
+					else:
+						sentence1 = ['not', aux[1]]
 				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
-					sentence2 = ['not', aux[2]]
+					if len(aux[2]) == 1:
+						sentence2 = ('not', aux[2])
+					else:
+						sentence2 = ['not', aux[2]]
 
 				sentence[0]='and'
 				sentence[1]=sentence1
@@ -107,11 +113,17 @@ def negation(sentence):
 				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
-					sentence1 = ['not', aux[1]]
+					if len(aux[1]) == 1:
+						sentence1 = ('not', aux[1])
+					else:
+						sentence1 = ['not', aux[1]]
 				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
-					sentence2 = ['not', aux[2]]
+					if len(aux[2]) == 1:
+						sentence2 = ('not', aux[2])
+					else:
+						sentence2 = ['not', aux[2]]
 
 				sentence[0]='or'
 				sentence[1]=sentence1
@@ -124,67 +136,42 @@ def negation(sentence):
 
 
 def disjunction(sentence):
+#	print('START', sentence)
 	if(sentence[0] == 'or'):
-		if (literal(sentence[1]) and literal(sentence[2])):
-			return
 
-		elif (literal(sentence[1])):
-			new1 = ['or', sentence[1], sentence[2][1]]
-			new2 = ['or', sentence[1], sentence[2][2]]
-
-			if sentence[2][0] == 'and':
-				sentence[0] = 'and'
-			elif sentence[2][0] == 'or':
-				sentence[0] = 'or'
-
-			sentence[1] = new1
-			sentence[2] = new2
-
-
-		elif (literal(sentence[2])):
-			new1 = ['or', sentence[2], sentence[1][1]]
-			new2 = ['or', sentence[2], sentence[1][2]]
-
-			if sentence[1][0]=='and':
-				sentence[0] = 'and'
-			elif sentence[1][0]=='or':
-				sentence[0] = 'or'
-
-			sentence[1] = new1
-			sentence[2] = new2
-
-		elif sentence[1][0] =='and':
-			if sentence[2][0] == 'or':
-				new1 = ['or', sentence[1][1], sentence[2]]
-				new2 = ['or', sentence[1][2], sentence[2]]
-				sentence[0] = 'and'
-				sentence[1] = new1
-				sentence[2] = new2
-
-			elif sentence[2][0] == 'and':
-				new1=['or', sentence[1][1], sentence[2][1]]
-				new2=['or', sentence[1][2], sentence[2][1]]
-				new3=['or', sentence[1][1], sentence[2][2]]
-				new4=['or', sentence[1][2], sentence[2][2]]
-				sentence1=['and',new1, new2]
-				sentence2=['and', new3, new4]
-				sentence[0] = 'and'
-				sentence[1] = sentence1
-				sentence[2] = sentence2
-
-		elif sentence[1][0]=='or':
-			if sentence[2][0]== 'and':
+		if (len(sentence[2])>1 and sentence[2][0] == 'and'):
 				new1 = ['or', sentence[2][1], sentence[1]]
 				new2 = ['or', sentence[2][2], sentence[1]]
 				sentence[0] = 'and'
 				sentence[1] = new1
 				sentence[2] = new2
 
+		elif (len(sentence[1])>1 and sentence[1][0] =='and'):
+				new1 = ['or', sentence[1][1], sentence[2]]
+				new2 = ['or', sentence[1][2], sentence[2]]
+				sentence[0] = 'and'
+				sentence[1] = new1
+				sentence[2] = new2
+
+#	print('END', sentence)
 
 	for cond in sentence[1:]:
 		if len(cond)>1:
 			disjunction(cond)
 
+def switch_associative(sentence):
+	if(sentence[0] == 'and'):
+		if (not literal(sentence[2]) and (sentence[2][0] == 'and')):
+			if (literal(sentence[1]) or (sentence[1][0] == 'or')):
+				aux1 = sentence[1]
+				aux2 = sentence[2]
+				sentence[2] = aux1
+				sentence[1] = aux2
+
+
+	for cond in sentence[1:]:
+		if len(cond)>1:
+			switch_associative(cond)
 
 def finishing_or(sentence):
 	if sentence[0] == 'or':
@@ -224,28 +211,42 @@ def finishing_and(sentence):
 		if len(cond)>1:
 			finishing_and(cond)
 
-#def fix_sentences(sentence):
 
-
-
-
-
-
-
+def dprint(sentence):
+	if sentence[0] == 'and':
+		dprint(sentence[1])
+		print('')
+		dprint(sentence[2])
+	elif sentence[0] == 'or':
+		dprint(sentence[1])
+		print(', ', end='')
+		dprint(sentence[2])
+	else:
+		print(sentence, end='')
 
 """ ------ MAIN FUNCTION ------ """
 
 nlines = 0
 myConditions=list()
 for line in sys.stdin:
-	l = list(line)
-	s = ['[' if x == '(' else ']' if x == ')' else x for x in l]
-	new_line = "".join(s)
+	print(line)
+	s = line
+	for i in range(0, len(line)):
+		if line[i] == '(' and line[i+1] != 'n':
+			s = s[:i] + '[' + s[i+1:]
+		if line[i] == ')' and line[i-1] != 't':
+			s = s[:i] + ']' + s[i+1:]
 
-	sentence= list(eval(new_line))
+	print(s)
+
+	sentence = list(eval(s))
 	convert(sentence)
 
-	print(sentence)
+	print('TOTAL', sentence)
+	dprint(sentence)
+	print()
+
+
 	nlines = nlines + 1
 
 """	for condition in sentence:

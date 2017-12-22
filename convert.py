@@ -35,7 +35,7 @@ def convert(sentence, myConditions):
 					test = True
 
 				elif cond == 'or':
-					aux_o = aux_o+1
+					aux_o = aux_o + 1
 					aux_not = False
 					test = True
 
@@ -45,9 +45,9 @@ def convert(sentence, myConditions):
 				elif aux_o > 0:
 					if cond != 'and' or cond != 'or' or cond !='not':
 						if aux_not != False:
-							myConditions.extend((aux_not+cond))
+							myConditions.extend([aux_not+cond])
 						else:
-							myConditions.extend(cond)	 
+							myConditions.extend([cond])	 
 						aux_not = False
 						aux_o = aux_o-1
 
@@ -55,9 +55,9 @@ def convert(sentence, myConditions):
 					if cond != 'and' or cond != 'or' or cond !='not':
 						a=list(myConditions)
 						if aux_not != False:
-							a.extend((aux_not+cond))
+							a.extend([aux_not+cond])
 						else:
-							a.extend(cond)
+							a.extend([cond])
 						aux_not = False
 						aux_a = aux_a + 1 
 
@@ -65,9 +65,9 @@ def convert(sentence, myConditions):
 					if cond != 'and' or cond != 'or' or cond !='not':
 						b=list(myConditions)
 						if aux_not != False:
-							b.extend(aux_not)
+							b.extend([aux_not+cond])
 						else:
-							b.extend(cond)
+							b.extend([cond])
 						myConditions.clear()
 						myConditions.extend(a + b)
 						aux_not = False

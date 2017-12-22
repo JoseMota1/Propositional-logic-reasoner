@@ -7,7 +7,6 @@ def readfile():
 	for line in sys.stdin:
 		sentence = eval(line)
 		myConditions.append(sentence)
-	#simplifi_2(myConditions)
 	return myConditions
 
 def solve(myConditions, r, visited):
@@ -15,9 +14,9 @@ def solve(myConditions, r, visited):
 		return False
 
 	for i in range(len(myConditions)):
-		#print('1', myConditions[i], '2', r)
-		newR,resolved = resolution(myConditions[i], r)
-		#print(newR, resolved)
+		# print('1', myConditions[i], '2', r)
+		newR, resolved = resolution(myConditions[i], r)
+		# print(newR, resolved)
 		try:
 			visited[i] = True
 		except Exception as e:
@@ -100,12 +99,14 @@ def resolution(sentence1, sentence2):
 
 def main():
 	myConditions = readfile()
-	print('KB:', myConditions)
-	alpha = myConditions[-1]
+	# print('KB:', myConditions)
+	myConditions2 = simplifi_2(myConditions)
+	# print('KB:', myConditions2)
+	alpha = myConditions2[-1]
 	#print('negated alpha:', alpha)
-	visited = [False]*(len(myConditions))
+	visited = [False]*(len(myConditions2))
 	visited[-1] = True
-	if solve(list(myConditions[:-1]), alpha, visited):
+	if solve(list(myConditions2[:-1]), alpha, visited):
 		print("True")
 	else :
 		print("False")
@@ -114,24 +115,21 @@ def main():
 def simplifi_2(myConditions):
 	#tautologies	can	be	removed
 	#clauses	that	contain	both	a	literal	and	its	nega.on
-	final=[]
+	final = []
 	for sentence in myConditions:
-		tautology = True
+		tautology = False
 		for e in sentence:
 			if len(e)>1:
 				if e[1] in sentence:
-					continue
-				else:
-					tautology = False
+					tautology = True
+
 			else:
 				if ('not', e) in sentence:
-					continue
-				else:
-					tautology = False	
-					
+					tautology = True
+
 		if not tautology:
 			final.append(sentence)
-			
+
 	return final
 
 

@@ -1,0 +1,12 @@
+KB: [['A', 'B', 'D'], ['B', 'C'], [('not', 'B'), ('not', 'D')], [('not', 'C'), ('not', 'B')], ('not', 'A')]
+negated alpha: ('not', 'A')
+1 ['A', 'B', 'D'] 2 ('not', 'A')
+['D', 'B'] True
+Append
+1 ['A', 'B', 'D'] 2 ['D', 'B']
+['D', 'A', 'B'] False
+1 ['B', 'C'] 2 ['D', 'B']
+['D', 'B', 'C'] False
+1 [('not', 'B'), ('not', 'D')] 2 ['D', 'B']
+[] True
+True

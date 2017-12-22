@@ -77,17 +77,23 @@ def resolution(sentence1, sentence2):
 
 	c = a|b
 	resolved = False
-	for e in a:							#Se encontrar a sentence1 na sentence2 vai remover os dois e retorna a lista
+	for e in a:						#Se encontrar a sentence1 na sentence2 vai remover os dois e retorna a lista
 		if len(e)>1:
 			if e[1] in b:
-				c.remove(e[1])
-				c.remove(e)
-				resolved = True
+				try:
+					c.remove(e[1])
+					c.remove(e)
+					resolved = True
+				except Exception as e:
+					pass
 		else:
 			if ('not', e) in b:					#Se encontrar a negação e o normal em ambas as listas então remove e retorna a lista
-				c.remove(('not', e))
-				c.remove(e)
-				resolved = True
+				try:
+					c.remove(('not', e))
+					c.remove(e)
+					resolved = True
+				except Exception as e:
+					pass
 
 	return list(c), resolved
 

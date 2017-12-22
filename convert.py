@@ -15,7 +15,7 @@ def convert(sentence):
 	disjunction(sentence)
 	finishing(sentence)
 
-		
+
 
 def atom(sentence):
 	if len(sentence)>1:
@@ -63,7 +63,7 @@ def implication(sentence):
 	if(sentence[0] == '=>'):
 		aux=['not', sentence[1]]
 		sentence[0] = 'or'
-		sentence[1] = aux	
+		sentence[1] = aux
 
 	for cond in sentence[1:]:
 		if len(cond)>1:
@@ -77,7 +77,7 @@ def negation(sentence):
 				sentence.remove('not')
 				sentence[0] = sentence[0][1]
 
-			elif aux[0] == 'or':		
+			elif aux[0] == 'or':
 				sentence0 = 'and'
 				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
@@ -105,11 +105,11 @@ def negation(sentence):
 				sentence[0]='or'
 				sentence[1]=sentence1
 				sentence.append(sentence2)
-	
+
 	for cond in sentence[1:]:
 		if len(cond)>1:
 			negation(cond)
-		
+
 
 
 def disjunction(sentence):
@@ -169,14 +169,14 @@ def disjunction(sentence):
 				sentence[1] = new1
 				sentence[2] = new2
 
-	
-	for cond in sentence[1:]:	
+
+	for cond in sentence[1:]:
 		if len(cond)>1:
 			disjunction(cond)
 
 
 def finishing(sentence):
-	if sentence[0] == 'or':	
+	if sentence[0] == 'or':
 		aux0 = sentence[1] , sentence[2]
 		aux1 = sentence[1]
 		sentence.remove('or')
@@ -187,7 +187,7 @@ def finishing(sentence):
 		sentence.remove('and')
 
 
-	for cond in sentence:	
+	for cond in sentence:
 		if len(cond)>1:
 			finishing(cond)
 
@@ -217,10 +217,46 @@ for condition in sentence:
 				l = repr(condition)
 				s = ['' if (x == '(') or (x == ')') or (x == '[') or (x == ']') else x for x in l]
 				new_cond = "".join(s)
-				print(new_cond)
+				new_cond = '[' + new_cond
+				new_cond = new_cond + ']'
+				s = new_cond
+				fw = 0
+				for i in range(len(new_cond) - 4):
+					if (new_cond[i] == "'" and new_cond[i+1] == 'n' and new_cond[i+2] == 'o' and
+							new_cond[i+3] == 't' and new_cond[i+4] == "'"):
+						pp = 0
+						pi = 0
+						for c in s[(i+fw):]:
+							pi += 1
+							if c == "'":
+								pp += 1
+							if(pp) == 4:
+								break
+
+						s = s[:(i+fw)] + '(' + s[(i+fw):(i+pi+fw)] + ')' + s[(i+pi+fw):]
+						fw += 2
+				print(s)
 			else:
 				for e in condition:
 					l = repr(e)
 					s = ['' if (x == '(') or (x == ')') or (x == '[') or (x == ']') else x for x in l]
 					new_cond = "".join(s)
-					print(new_cond)
+					new_cond = '[' + new_cond
+					new_cond = new_cond + ']'
+					s = new_cond
+					fw = 0
+					for i in range(len(new_cond) - 4):
+						if (new_cond[i] == "'" and new_cond[i+1] == 'n' and new_cond[i+2] == 'o' and
+								new_cond[i+3] == 't' and new_cond[i+4] == "'"):
+							pp = 0
+							pi = 0
+							for c in s[(i+fw):]:
+								pi += 1
+								if c == "'":
+									pp += 1
+								if(pp) == 4:
+									break
+
+							s = s[:(i+fw)] + '(' + s[(i+fw):(i+pi+fw)] + ')' + s[(i+pi+fw):]
+							fw += 2
+					print(s)

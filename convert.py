@@ -184,11 +184,8 @@ def finishing(sentence):
 		sentence[0]=aux0
 
 	elif sentence[0] == 'and':
-		aux0 = sentence[1]
-		aux1 = sentence[2]
 		sentence.remove('and')
-		sentence[0]=aux0
-		sentence[1]=aux1
+
 
 	for cond in sentence:	
 		if len(cond)>1:
@@ -217,7 +214,13 @@ for condition in sentence:
 	else:
 		if condition:
 			if not isinstance(condition[0], list):
-				print(condition)
+				l = repr(condition)
+				s = ['' if (x == '(') or (x == ')') or (x == '[') or (x == ']') else x for x in l]
+				new_cond = "".join(s)
+				print(new_cond)
 			else:
 				for e in condition:
-					print(e)
+					l = repr(e)
+					s = ['' if (x == '(') or (x == ')') or (x == '[') or (x == ']') else x for x in l]
+					new_cond = "".join(s)
+					print(new_cond)

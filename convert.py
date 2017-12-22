@@ -13,7 +13,7 @@ def convert(sentence):
 	disjunction(sentence)
 	switch_associative(sentence)
 	disjunction(sentence)
-
+	
 def atom(sentence):
 	if len(sentence)>1:
 		return False

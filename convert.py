@@ -9,17 +9,19 @@ isConjunction = False
 
 def convert(sentence):
 
+	print('original:', sentence, 'end')
 	equivalence(sentence)
+	print('equivalence:', sentence, 'end')
 	implication(sentence)
-
+	print('implication:', sentence, 'end')
 	negation(sentence)
+	print('negation:', sentence, 'end')
 	disjunction(sentence)
-	print('disj', sentence, 'end')
+	print('disjunction', sentence, 'end')
 	#finishing_or(sentence)
 	#print('or_finish', sentence, 'end')
 	#finishing_and(sentence)
 	#print('and_finish', sentence, 'end')
-
 
 
 def atom(sentence):
@@ -33,7 +35,6 @@ def atom(sentence):
 			return True
 	else:
 		return False
-
 
 
 def neg_atom(sentence):
@@ -60,19 +61,24 @@ def equivalence(sentence):
 		sentence[1] = ['=>', aux1, aux2]
 		sentence[2] = ['=>', aux2, aux1]
 
-	for cond in sentence[1:]:
+	for cond in sentence:
 		if len(cond)>1:
 			equivalence(cond)
 
+
 def implication(sentence):
 	if(sentence[0] == '=>'):
-		aux=['not', sentence[1]]
+		if len(sentence[1]) == 1:
+			aux = ('not', sentence[1])
+		else:
+			aux = ['not', sentence[1]]
 		sentence[0] = 'or'
 		sentence[1] = aux
 
-	for cond in sentence[1:]:
+	for cond in sentence:
 		if len(cond)>1:
 			implication(cond)
+
 
 def negation(sentence):
 	if(sentence[0] == 'not'):
@@ -296,4 +302,3 @@ for line in sys.stdin:
 								s = s[:(i+fw)] + '(' + s[(i+fw):(i+pi+fw)] + ')' + s[(i+pi+fw):]
 								fw += 2
 						print(s)"""
-

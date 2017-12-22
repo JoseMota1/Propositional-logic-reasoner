@@ -13,7 +13,8 @@ def convert(sentence):
 	implication(sentence)
 	negation(sentence)
 	disjunction(sentence)
-	finishing(sentence)
+	#finishing_or(sentence)
+	finishing_and(sentence)
 
 
 
@@ -82,11 +83,11 @@ def negation(sentence):
 				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
-					sentence1 = ['not', [aux[1]]]
+					sentence1 = ['not', aux[1]]
 				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
-					sentence2 = ['not', [aux[2]]]
+					sentence2 = ['not', aux[2]]
 
 				sentence[0]='and'
 				sentence[1]=sentence1
@@ -96,11 +97,11 @@ def negation(sentence):
 				if (aux[1][0]=='not'):
 					sentence1 = aux[1][1]
 				else:
-					sentence1 = ['not', [aux[1]]]
+					sentence1 = ['not', aux[1]]
 				if (aux[2][0] == 'not'):
 					sentence2 = aux[2][1]
 				else:
-					sentence2 = ['not', [aux[2]]]
+					sentence2 = ['not', aux[2]]
 
 				sentence[0]='or'
 				sentence[1]=sentence1
@@ -175,21 +176,33 @@ def disjunction(sentence):
 			disjunction(cond)
 
 
-def finishing(sentence):
+def finishing_or(sentence):
 	if sentence[0] == 'or':
+		#print('1111', sentence[1])
+		#print('1222', sentence[2])
 		aux0 = sentence[1] , sentence[2]
 		aux1 = sentence[1]
 		sentence.remove('or')
 		sentence.remove(aux1)
 		sentence[0]=aux0
 
-	elif sentence[0] == 'and':
+
+	for cond in sentence:
+		if len(cond)>1:
+			finishing_or(cond)
+
+def finishing_and(sentence):
+	if sentence[0] == 'and':
+		#print('2111', sentence[1])
+		#print('2222', sentence[2])
+		sentence[1]=sentence[1]
+		sentence[2]=sentence[2]
 		sentence.remove('and')
 
 
 	for cond in sentence:
 		if len(cond)>1:
-			finishing(cond)
+			finishing_and(cond)
 
 """ ------ MAIN FUNCTION ------ """
 
@@ -203,8 +216,8 @@ for line in sys.stdin:
 	sentence= list(eval(new_line))
 	convert(sentence)
 
+	print(sentence)
 	nlines = nlines + 1
-
 
 	for condition in sentence:
 		if literal(sentence):
@@ -260,3 +273,4 @@ for line in sys.stdin:
 								s = s[:(i+fw)] + '(' + s[(i+fw):(i+pi+fw)] + ')' + s[(i+pi+fw):]
 								fw += 2
 						print(s)
+

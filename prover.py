@@ -3,7 +3,6 @@ import itertools
 
 def readfile():
 	myConditions = []
-	fp = open('cnf.txt', 'r')
 	for line in sys.stdin:
 		sentence = eval(line)
 		myConditions.append(sentence)
